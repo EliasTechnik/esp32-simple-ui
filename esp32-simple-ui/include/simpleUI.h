@@ -25,8 +25,7 @@ class uielement : dimensions{
         U8G2 display;
         string name;
     public:
-        uielement(unsigned int _pos_x, unsigned int _pos_y, unsigned int _width, unsigned int _height, bool isVisible = true)
-            : dimensions{_pos_x, _pos_y, _width, _height};
+        uielement(unsigned int _pos_x, unsigned int _pos_y, unsigned int _width, unsigned int _height, bool isVisible = true);
         void setVisible(bool isVisible);
         bool getVisible();
         void setDisplay(U8G2 _display);
