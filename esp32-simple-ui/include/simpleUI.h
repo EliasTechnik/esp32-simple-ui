@@ -60,11 +60,21 @@ class label : public uielement{
         //TODO: setFont, setSize, setColor, setUnderline, setItallic, setBold
 };
 
+class glyph : public uielement{
+    protected:
+        uint16_t code
+    public:
+        glyph(uint16_t uni_code, unsigned int _pos_x, unsigned int _pos_y, bool isVisible = true);
+        void setCode(uint16_t);
+        uint16_t getCode();
+}
+
 class uipage{
     protected:
         uielement* elist; //dynamic array  
         string name;
         unsigned int ecount; 
+        uipagegroup childgroup; //stores a potential childgroup behind that page (has no function but can be used to make menu building and navigation easyer)
     public:    
         uipage(string _name); //constructor
         ~uipage(); //destructor
@@ -72,17 +82,17 @@ class uipage{
         unsigned int addUIElement(uielement _e);
         uielement getUIElement(int index);
         uielement getUIElement(string name);
+        void setChildgroup(uipagegroup _childgroup);
+        uipagegroup getCHildgroup();
 };
 
-class ui{
+class uipagegroup{
     protected:
-        unsigned int x;
-        unsigned int y;
         unsigned int pagecount; //counts the number of available ui pages
         unsigned int pagepos;
         uipage* pagelist;
     public:
-        ui(U8G2 display, unsigned int _x, unsigned int _y, unsigned int _pagecount);
+        ui(U8G2 display, unsigned int _pagecount);
         ~ui();
         unsigned int addPage(uipage page);
         uipage getPage(unsigned int index);

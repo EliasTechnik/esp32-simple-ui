@@ -57,3 +57,25 @@ unsigned char* icon::getBitmap(){
 void icon::draw(){
     display.drawXBM(pos_x,pos_y,width,height,bitmap);
 }
+
+//label
+label::label(string _text, unsigned int _pos_x, unsigned int _pos_y, unsigned int _width, unsigned int _height, bool isVisible = true){
+    this->setDimension(_pos_x, _pos_y, _width, _height);
+    this->setVisible(isVisible);
+}
+void label::setText(string _text){
+    text = _text;
+}
+void label::setAligne(UIEaligne _aligne){
+    aligne = _aligne;
+}
+UIEaligne label::getAligne(){
+    return aligne;
+}
+string label::getText(){
+    return text;
+}
+void label::draw(){
+    
+    display.
+}
