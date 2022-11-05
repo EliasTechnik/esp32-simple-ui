@@ -64,7 +64,7 @@ class uiElement : public dimensions{
 };
 
 struct uiCallback{
-    void (*CB)(void * context, uiElement *trigger, UIEventType event_type);
+    void (*CB)(void * context, void *trigger, UIEventType event_type);
     void * CBcontext;
 };
 
@@ -75,6 +75,8 @@ class uiInteractive{
         bool focus; //true if element has focus (display inverted)
         uiCallback CBonEvent; 
     public:
+        uiInteractive();
+        void setCB(uiCallback _CBonEvent);
         void triggerUIaction(UIEventType triggerType);
         void setFocus(bool _focus = true);
 };
@@ -105,12 +107,37 @@ class staticLabel : public uielement{
     public:
         staticLabel();
         virtual void init(char _text[capacity], unsigned int _pos_x, unsigned int _pos_y, unsigned int _width, unsigned int _height, bool isVisible = true);
-        void setText(char _text[capacity]);
         void setAligne(UIEaligne _aligne);
         UIEaligne getAligne();
-        char* getText();
         //TODO: setFont, setSize, setColor, setUnderline, setItallic, setBold
 };
+
+//staticLabel
+template <unsigned int capacity>
+staticLabel<capacity>::staticLabel(){
+    setDimensions();
+    setVisible(true);
+    aligne = UIEaligne::UIEAleft;
+};
+
+template <capacity>
+void staticLabel< capacity>::init(char _text[capacity], unsigned int _pos_x, unsigned int _pos_y, unsigned int _width, unsigned int _height, bool isVisible){
+    text = _text;
+    setDimensions(_pos_x,_pos_y,_width,_height);
+    setVisible(isVisible);
+};
+
+template <unsigned int capacity>
+void staticLabel<capacity>::setAligne(UIEaligne _aligne){
+    aligne = _aligne;
+};
+
+template <unsigned int capacity>
+UIEaligne staticLabel<capacity>::getAligne(){
+    return aligne;
+}
+
+
 
 template <unsigned int capacity> 
 class interactiveStaticLabel : public staticLabel , public uiInteractive{
@@ -120,6 +147,23 @@ class interactiveStaticLabel : public staticLabel , public uiInteractive{
         interactiveStaticLabel();
         virtual void init(char _text[capacity], unsigned int _pos_x, unsigned int _pos_y, unsigned int _width, unsigned int _height, bool isVisible = true);
 };
+
+//interactiveStaticLabel
+template <unsigned int capacity>
+interactiveStaticLabel<capacity>::interactiveStaticLabel(){
+    setDimensions();
+    aligne = UIEaligne::UIEAleft;
+    setVisible(true);
+};
+
+template <unsigned int capacity>
+void interactiveStaticLabel<capacity>::init(char _text[capacity], unsigned int _pos_x, unsigned int _pos_y, unsigned int _width, unsigned int _height, bool isVisible = true){
+    text = _text;
+    setDimensions(_pos_x,_pos_y,_width,_height);
+    setVisible(isVisible);
+};
+
+
 
 class glyph : public uiElement{
     protected:
