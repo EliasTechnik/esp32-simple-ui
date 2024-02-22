@@ -12,7 +12,7 @@ class uipage{
         unsigned int pageID;
         unsigned int ecount; 
         unsigned int icount;
-        uipagegroup childgroup; //stores a potential childgroup behind that page (has no function but can be used to make menu building and navigation easyer)
+        //uipagegroup* childgroup; //stores a potential childgroup behind that page (has no function but can be used to make menu building and navigation easier)
     public:    
         uipage(); //constructor
         ~uipage(); //destructor
@@ -22,8 +22,8 @@ class uipage{
         unsigned int addUIInteractive(uiInteractive _i);
         uiElement getUIElement(unsigned int index);
         uiInteractive getUIinteractive(unsigned int index);
-        void setChildgroup(uipagegroup _childgroup);
-        uipagegroup getChildgroup();
+        //void setChildgroup(uipagegroup _childgroup);
+        //uipagegroup getChildgroup();
 };
 
 /*Groups UI-Pages together*/
