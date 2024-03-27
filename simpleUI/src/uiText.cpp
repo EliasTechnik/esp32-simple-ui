@@ -1,3 +1,4 @@
+/*
 #include "uiText.h"
 
 //staticLabel
@@ -9,9 +10,9 @@ staticLabel<capacity>::staticLabel(){
 };
 
 template <unsigned int capacity>
-void staticLabel<capacity>::init(char _text[capacity], unsigned int _pos_x, unsigned int _pos_y, unsigned int _width, unsigned int _height, bool isVisible){
+void staticLabel<capacity>::init(char _text[capacity], unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool isVisible){
     text = _text;
-    setDimensions(_pos_x,_pos_y,_width,_height);
+    setDimensions(_posX,_posY,_width,_height);
     setVisible(isVisible);
 };
 
@@ -34,8 +35,10 @@ interactiveStaticLabel<capacity>::interactiveStaticLabel(){
 };
 
 template <unsigned int capacity>
-void interactiveStaticLabel<capacity>::init(char _text[capacity], unsigned int _pos_x, unsigned int _pos_y, unsigned int _width, unsigned int _height, bool isVisible = true){
+void interactiveStaticLabel<capacity>::init(char _text[capacity], unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool isVisible = true){
     text = _text;
-    setDimensions(_pos_x,_pos_y,_width,_height);
+    setDimensions(_posX,_posY,_width,_height);
     setVisible(isVisible);
 };
+
+*/

@@ -5,6 +5,7 @@
 /*A UI-Page owns a set of ui elements.
 The Element-ID are given by the page*/
 
+/*
 class uipage{
     protected:
         uiElement* elist; //dynamic array of non interactive Elements 
@@ -26,8 +27,10 @@ class uipage{
         //uipagegroup getChildgroup();
 };
 
-/*Groups UI-Pages together*/
+*/
 
+/*Groups UI-Pages together*/
+/*
 class uipagegroup{
     protected:
         unsigned int pagecount; //counts the number of available ui pages
@@ -43,3 +46,5 @@ class uipagegroup{
         void displayPage(unsigned int index);
         void updateUI(); //updates the display, should be called several times a second (30x for 30 FPS)
 };
+
+*/

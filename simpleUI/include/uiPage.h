@@ -4,6 +4,13 @@
 
 
 /*A UI-Page owns a set of ui elements.
+They get drawn in the order they are added (back to front).
+
+On every uiPage there are four input posibilitys:
+    - enter
+    - up
+    - down
+    - return: leaves the 
 The Element-ID are given by the page*/
 
 class uipage{
@@ -44,3 +51,6 @@ class uipagegroup{
         void displayPage(unsigned int index);
         void updateUI(); //updates the display, should be called several times a second (30x for 30 FPS)
 };
+
+
+

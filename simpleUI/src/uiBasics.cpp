@@ -2,22 +2,26 @@
 
 //dimmensions
 dimensions::dimensions(){
-    pos_x=0;
-    pos_y=0;
+    posX=0;
+    posY=0;
     width=0;
     height=0;
 };
 
-void dimensions::init(unsigned int _pos_x, unsigned int _pos_y, unsigned int _width, unsigned int _height){
-    this->setDimension(_pos_x,_pos_y,_width,_height);
+dimensions::dimensions(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height){
+    this->setDimension(_posX,_posY,_width,_height);
 }
 
+dimensions::~dimensions(){
+
+};
+
 unsigned int dimensions::getX(){
-    return pos_x;
+    return posX;
 };
 
 unsigned int dimensions::getY(){
-    return pos_y;
+    return posY;
 };
 
 unsigned int dimensions::getWidth(){
@@ -28,9 +32,25 @@ unsigned int dimensions::getHeight(){
     return height;
 };
 
-void dimensions::setDimension(unsigned int _pos_x, unsigned int _pos_y, unsigned int _width, unsigned int _height){
-    pos_x=_pos_x;
-    pos_y=_pos_y;
+void dimensions::setDimension(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height){
+    posX=_posX;
+    posY=_posY;
     width=_width;
+    height=_height;
+};
+
+void dimensions::setPosX(unsigned int _posX){
+    posX=_posX;
+};
+
+void dimensions::setPosY(unsigned int _posY){
+    posY=_posY;
+};
+
+void dimensions::setWidth(unsigned int _width){
+    width=_width;
+};
+
+void dimensions::setHeight(unsigned int _height){
     height=_height;
 };
