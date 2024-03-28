@@ -11,9 +11,9 @@ A uiGroup supports also navigation between elements.
 A uiGroup can have the focus by it self. But it is not selectable. Instead it choses sets the first selectable child as selected but reacts to UA until one child is in focus
 */
 
-class uiGroup:uiElement{
+class uiGroup: public uiElement{
     protected:
-        vector<uiElement>* elements;
+        std::vector<uiElement*> elements;
         unsigned int childIDwithPreFocus = 0;
     public:
         uiGroup();

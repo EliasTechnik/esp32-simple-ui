@@ -68,6 +68,8 @@ enum class FocusDirection{fromParent,fromChild,fromUperNeighbour,fromLowerNeighb
 
 enum class UserAction{none, generalButton, backButton, leftButton, rightButton, enterButton};
 
+enum class ScreenState{off, on};
+
 struct InputAction{
   UserAction action=UserAction::none;
   bool executed=false;
@@ -77,4 +79,12 @@ struct InputAction{
 struct uiCallback{
     void (*CB)(void * context, void *trigger, UIEventType event_type);
     void * CBcontext;
+};
+
+struct DisplayConfig{
+    unsigned long screenSleepTime = 20000;
+    int frameDistance = 66;
+    int flashHalfCycle = 300;
+    bool useSleep = true;
+    U8G2* display = nullptr;
 };

@@ -37,4 +37,6 @@ class uiElement : public dimensions{
         virtual void draw(frameInfo* f) = 0; //should be overwritten by every child class which inherrits from uielement
         void react(UserAction UA);
         void receiveFocus(FocusDirection fd);
+        FocusState getFocusState();
+        void removeFocus(FocusDirection fd);
 };

@@ -120,3 +120,23 @@ void uiElement::receiveFocus(FocusDirection fd){
     }
     
 };
+
+FocusState uiElement::getFocusState(){
+    return focus;
+}
+
+void uiElement::removeFocus(FocusDirection fd){
+    //check if we even get the focus (if this element is selectable)
+        switch(fd){
+            case FocusDirection::fromChild:
+                focus = FocusState::child; //unlikely
+            break;
+            case FocusDirection::fromParent:
+                focus = FocusState::parent;
+            break;
+            default:
+                //nothing
+                Slog("removed focus in unknown direction!");
+        }
+    }
+    

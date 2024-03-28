@@ -4,6 +4,8 @@
 #include "uiInteractive.h"
 #include "uiGraphics.h"
 #include "uiGroup.h"
+#include "uiBasics.h"
+#include "uiRoot.h"
 
 
 //Pin Config
@@ -19,14 +21,14 @@
 #define SD_MOSI 13
 
 //Config
-unsigned long SCREEN_SLEEPTIME=5000;
+unsigned long SCREEN_SLEEPTIME=20000;
 int AUTOPRESS_SPEED=50;
 int AUTOPRESS_DELAY=500;
 int DISPLAY_FRAME_DISTANCE=66;
-unsigned int DISPLAY_BLINK_DURATION=500; //ms 
+unsigned int DISPLAY_BLINK_DURATION=300; //ms (one half of the blink cycle)
 
 
-enum class ScreenState{off, on};
+
 enum class ButtonStates{down,up,};
 
 
@@ -142,107 +144,41 @@ void IRAM_ATTR b_enter_ISR(){
   b_enter.laststate=v;
 }
 
-void u8g2_prepare(void) {
-  u8g2.setFont(u8g2_font_6x10_tf);
-  u8g2.setFontRefHeightExtendedText();
-  u8g2.setDrawColor(1);
-  u8g2.setFontPosCenter();
-  u8g2.setFontDirection(0);
-}
 
 //UI Globals
 
 frameInfo fi;
+uiRoot* display; 
 uiBox* testBox; 
 uiBox* outlineBox;
-uiGroup* group;
+uiPage* page;
 
 
 void setupUI(){
 
-  fi.display = &u8g2;
+  DisplayConfig config;
 
-  group = new uiGroup(3);
+  config.display = &u8g2;
+
+  display = new uiRoot(config);
+
+  page = new uiPage();
   //testBox = new uiBox(0,5,5,118,54);
   //outlineBox = new uiBox(0,0,0,128,64, false);
 
-  group->addElement(
+  page->addElement(
     new uiBox(10,10,20,8,false,true)
   );
-  group->addElement(
+  page->addElement(
     new uiBox(10,20,20,8,false,true)
   );
-  group->addElement(
+  page->addElement(
     new uiBox(10,30,20,8,false,true)
   );
+
+  display->addPage(page);
 }
 
-
-void displayUI(){
-  u8g2.clearBuffer();
-
-  if(millis()-last_display_flash < DISPLAY_BLINK_DURATION*2){
-    last_display_flash = millis();
-    fi.highlightSelected = !fi.highlightSelected;
-  }  
-  
-  //draw functions
-  //testBox->draw(&fi);
-  //outlineBox->draw(&fi);
-  //Serial.println("drawn");
-  group->draw(&fi);
-
-  //u8g2.setBitmapMode(1); //for transparancy
-  
-}
-
-void FlushDisplay(){
-  if(next_display_frame<millis()){
-    next_display_frame=millis()+DISPLAY_FRAME_DISTANCE;
-    if(GLOBAL_SCREEN_STATE==ScreenState::on){
-      u8g2.sendBuffer();
-    }
-  }
-}
-
-void screenSwitch(ScreenState state){
-  //switches Screem on or off
-  if(state == ScreenState::off){
-    //switch off
-    if(GLOBAL_SCREEN_STATE==ScreenState::on){
-      u8g2.clearBuffer();
-      u8g2.sendBuffer();
-      GLOBAL_SCREEN_STATE=ScreenState::off;
-    }
-  }
-  else{
-    //switch on
-    if(GLOBAL_SCREEN_STATE==ScreenState::off){
-      GLOBAL_SCREEN_STATE=ScreenState::on;
-      FlushDisplay();
-    }
-  }
-}
-
-void energyManager(InputAction ia){
-  //keeps track of time and manages ScreenTime
-  if(ia.executed && !ia.present){
-    ia.action=UserAction::none;
-  }
-  if(ia.action==UserAction::none){
-    //check display time
-    if(screen_on_timer<=millis()){
-      //turn off
-      screenSwitch(ScreenState::off);
-      Serial.println("Screen off.");
-    }
-  }
-  else{
-    //reset display time
-    screenSwitch(ScreenState::on);
-    screen_on_timer=millis()+SCREEN_SLEEPTIME;
-  }
-}
 
 void setup() {
   b_back.pin=BACK_BUTTON;
@@ -261,42 +197,20 @@ void setup() {
   Serial.begin(115200);
 
   u8g2.begin();
-  u8g2_prepare();
-  //energyManager(UA); //kinda useless
 
   setupUI();
-  //GLOBAL_SCREEN_STATE = ScreenState::on;
+
 }
 
 void loop() {
-  //helloWorld();
-
   
-  //u8g2.clearBuffer();
-  displayUI();
-  //u8g2.drawXBM(0,0,128,64,_bits); 
-  //counter=IncValue(counter,1,UserAction::rightButton);
-  //counter=IncValue(counter,-1,UserAction::leftButton);
-  //itoa(counter,screenBuffer,10);
-  //u8g2.drawStr(0,24,screenBuffer);
+  if(!UA.executed){
+    display->react(UA.action); //this needs to be done differently. react() should take the InputAction and return it!
+    UA.executed = true;
+  }
 
-  
-  //final
-  energyManager(UA);
+  display->display();
 
-  UA.executed = true;
-
-  //for testing
-  //GLOBAL_SCREEN_STATE=ScreenState::on;
-
-  
-  
-  //draw functions
-  //testBox->draw(&fi);
-  //u8g2.drawBox(10,10,5,5);  
-  //u8g2.sendBuffer();
-
-  FlushDisplay();
 
 }
 
