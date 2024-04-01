@@ -28,7 +28,9 @@ uiGroup::~uiGroup(){
 
 void uiGroup::addElement(uiElement* _element){
     //elements->addItem(*_element);
+    _element->setParent(this);
     elements.push_back(_element);
+
 }
 
 void uiGroup::draw(frameInfo* f){
@@ -47,7 +49,7 @@ void uiGroup::react(UserAction UA){
             //we hand it down
             //get the child which has focus
 
-            elements[childIDwithPreFocus]->react(UA);
+            elements.at(selectedChildID)->react(UA);
 
             break;
         case FocusState::current:
@@ -57,45 +59,46 @@ void uiGroup::react(UserAction UA){
                     //the focus shifts back to parent
                     if(parent != nullptr){
                         focus = FocusState::parent;
-                        parent->receiveFocus(FocusDirection::fromChild);
+                        elements.at(selectedChildID)->setSelected(SelectionState::notSelected);
+                        parent->receiveFocus(this);
                         //onLeave() 
                     }
                     break;
                 case UserAction::enterButton:
                     //child gets focus
-                    if(child != nullptr){
-                        focus = FocusState::child;
-                        elements[childIDwithPreFocus]->receiveFocus(FocusDirection::fromParent);
-                        //onLeave() ?   
-                    }
+                    
+                    focus = FocusState::child;
+                    elements.at(selectedChildID)->receiveFocus(this);
+                    //onLeave() ?   
+                    
                     break;
                 case UserAction::leftButton:
                     //previous child gets selected 
 
                     //remove selection from old child
-                    elements[childIDwithPreFocus]->setSelected(SelectionState::notSelected);
+                    elements.at(selectedChildID)->setSelected(SelectionState::notSelected);
 
-                    if(childIDwithPreFocus == 0){
-                        childIDwithPreFocus = elements.size()-1;
+                    if(selectedChildID == 0){
+                        selectedChildID = elements.size()-1;
                     }else{
-                        childIDwithPreFocus--;
+                        selectedChildID--;
                     }
 
-                    elements[childIDwithPreFocus]->setSelected(SelectionState::showAsSelected);
+                    elements.at(selectedChildID)->setSelected(SelectionState::showAsSelected);
                     break;
                 case UserAction::rightButton:
                     //next child gets selected 
 
                     //remove selection from old child
-                    elements[childIDwithPreFocus]->setSelected(SelectionState::notSelected);
+                    elements.at(selectedChildID)->setSelected(SelectionState::notSelected);
 
-                    if(childIDwithPreFocus == elements.size()-1){
-                        childIDwithPreFocus = 0;
+                    if(selectedChildID == elements.size()-1){
+                        selectedChildID = 0;
                     }else{
-                        childIDwithPreFocus++;
+                        selectedChildID++;
                     }
 
-                    elements[childIDwithPreFocus]->setSelected(SelectionState::showAsSelected);
+                    elements.at(selectedChildID)->setSelected(SelectionState::showAsSelected);
                     break;
                 default:
                     if(onInput.CB != nullptr)
@@ -107,5 +110,31 @@ void uiGroup::react(UserAction UA){
             //this should not happen
             Slog("Error: reacted but Parent has focus!");
             break;
+    }
+}
+
+void uiGroup::removeFocus(uiElement* remover){
+    if(remover == parent){
+        if(focus != FocusState::current){
+            elements.at(selectedChildID)->removeFocus(this);
+        }
+        focus = FocusState::parent;
+    }
+}
+
+void uiGroup::receiveFocus(uiElement* sender){
+    //the focus comes from parent
+    switch(focus){
+        case FocusState::parent:
+            focus = FocusState::current;
+            Slog("Group has Focus.")
+        break;
+        case FocusState::current:
+            focus = FocusState::child;
+            elements.at(selectedChildID)->receiveFocus(this);
+        break;
+        case FocusState::child:
+            elements.at(selectedChildID)->receiveFocus(this);
+        break;
     }
 }

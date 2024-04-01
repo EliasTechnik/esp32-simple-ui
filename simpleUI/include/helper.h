@@ -18,3 +18,4 @@ inline void slog(String file, int line, String functionname, String message){
 
 
 #define Slog(message) slog(__FILE__,__LINE__,__FUNCTION_NAME__,message);
+

@@ -66,16 +66,18 @@ void uiBox::init(unsigned int _id, unsigned int _posX = 0, unsigned int _posY = 
 
 void uiBox::draw(frameInfo* f){
     //Slog("draw2");
+    bool showSelected = (!(selected == SelectionState::notSelected)) | (selectable && (focus == FocusState::current));
+
     if(visible){
         if(filled){
-            if(f->highlightSelected && selected != SelectionState::notSelected){
+            if(f->highlightSelected && showSelected){
                 f->display->drawFrame(posX, posY, width, height);
             }else{
                 f->display->drawBox(posX, posY, width, height);
             }
             
         }else{
-            if(f->highlightSelected && selected != SelectionState::notSelected){
+            if(f->highlightSelected && showSelected){
                 f->display->drawBox(posX, posY, width, height);
             }else{
                 f->display->drawFrame(posX, posY, width, height);

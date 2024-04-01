@@ -84,7 +84,7 @@ struct uiCallback{
 struct DisplayConfig{
     unsigned long screenSleepTime = 20000;
     int frameDistance = 66;
-    int flashHalfCycle = 300;
+    int flashHalfCycle = 250;
     bool useSleep = true;
     U8G2* display = nullptr;
 };

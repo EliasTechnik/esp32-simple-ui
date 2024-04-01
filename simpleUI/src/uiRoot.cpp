@@ -14,29 +14,33 @@ uiRoot::~uiRoot(){
 }
 
 void uiRoot::addPage(uiPage* page){
+    Slog("addPage");
     pages.push_back(page);
+    page->setRoot(this);
+
     if(pages.size() == 1){
-        pages[0]->receiveFocus(FocusDirection::fromParent);
-        pages[0]->setSelected(SelectionState::Selected); //do we need this?
+        uiPage* e = pages.front();
+
+        if(e == nullptr){
+            Slog("nullptr");
+        }
+        e->receiveFocus(this);
     }
+    
 }
 
 void uiRoot::display(){ 
     energyManager(); //takes care of about the sleep
 
+    //Slog("display");
+
     frameInfo fi;
-    fi.display = config.display;
+    fi = lastFrameInfo;
     
     fi.display->clearBuffer();
 
-    if(millis()-lastDisplayFlash >= config.flashHalfCycle){
-        lastDisplayFlash = millis();
-        fi.highlightSelected = !fi.highlightSelected;
-    }  
-
-    lastFrameInfo = fi;
-
     FlushDisplay(&fi);
+    //Slog("display end");
 }
 
 bool uiRoot::goToPage(uiPage* page){
@@ -48,48 +52,57 @@ bool uiRoot::goToElement(uiElement* element){
 }
 
 void uiRoot::react(UserAction UA){
+    Slog("react");
     //reset display time
-    screenSwitch(ScreenState::on);
     screenOnTime=millis()+ config.screenSleepTime;
-
-
-    if(pages[currentPage]->getFocusState()==FocusState::parent){
-        switch (UA){
-        case UserAction::leftButton:
-            if(currentPage == 0){
-                currentPage = pages.size()-1;
-            }else{
-                currentPage--;
-            }
-            break;
-        case UserAction::rightButton:
-            if(currentPage == pages.size()-1){
-                currentPage = 0;
-            }else{
-                currentPage++;
-            }
-            break;
-        case UserAction::enterButton:
-
-            //remove selection from old child
-            pages[currentPage]->removeFocus(FocusDirection::fromChild);
-
-            if(currentPage == pages.size()-1){
-                currentPage = 0;
-            }else{
-                currentPage++;
-            }
-
-            pages[currentPage]->receiveFocus(FocusDirection::fromParent);
-            break;
-        default:
-            pages[currentPage]->react(UA);
-            break;
-        }
+    if(globalDisplayState == ScreenState::off){
+        screenSwitch(ScreenState::on);
     }else{
-        pages[currentPage]->react(UA);
+        if(this->focus == FocusState::current){
+            switch (UA){
+                case UserAction::leftButton:
+                    Slog("left");
+                    if(currentPage == 0){
+                        currentPage = pages.size()-1;
+                    }else{
+                        currentPage--;
+                    }
+                    break;
+                case UserAction::rightButton:
+                    Slog("right");
+                    if(currentPage == pages.size()-1){
+                        currentPage = 0;
+                    }else{
+                        currentPage++;
+                    }
+                    break;
+                case UserAction::enterButton:
+                    Slog("enter");
+                    //remove selection from old child
+                    pages.at(currentPage)->removeFocus(this);
+                    Slog("removeFocus");
+                    if(currentPage == pages.size()-1){
+                        currentPage = 0;
+                    }else{
+                        currentPage++;
+                    }
+
+                    focus = FocusState::child;
+
+                    Slog("receiveFocus");
+                    pages.at(currentPage)->receiveFocus(this);
+                    break;
+                default:
+                    //pages[currentPage]->react(UA);
+                    //do nothing!
+                    Slog("unknown action");
+                    break;
+            }
+        }
+        else{
+            pages.at(currentPage)->react(UA);
+        }
     }
-    
 }
 
 void uiRoot::setConfig(DisplayConfig _config){
@@ -104,15 +117,23 @@ void uiRoot::init(){
     config.display->setDrawColor(1);
     config.display->setFontPosCenter();
     config.display->setFontDirection(0);
+
+    lastFrameInfo.display = config.display;
 }
 
 void uiRoot::FlushDisplay(frameInfo* fi){
   if(nextDisplayFrame<millis()){
     nextDisplayFrame=millis()+config.frameDistance;
-
-    drawUI(fi);
-
     if(globalDisplayState==ScreenState::on){
+
+        if(millis()-lastDisplayFlash >= config.flashHalfCycle){
+            lastDisplayFlash = millis();
+            fi->highlightSelected = !lastFrameInfo.highlightSelected;
+        }  
+
+        lastFrameInfo = *fi;
+
+        drawUI(fi);
       config.display->sendBuffer();
     }
   }
@@ -158,4 +179,15 @@ void uiRoot::energyManager(){
     //turn off
     screenSwitch(ScreenState::off);
     }
+}
+
+void uiRoot::receiveFocus(){
+    if(pages.size()>1){
+        focus = FocusState::current;
+    }else{
+        //reject focus
+        focus = FocusState::child;
+        pages.at(currentPage)->receiveFocus(this);
+    }
+    
 }

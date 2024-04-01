@@ -2,11 +2,14 @@
 #include "uiBasics.h"
 #include "uiPage.h"
 #include "uiElement.h"
+#include "uiPage.h"
 #include <vector>
 
 /*
 The uiRoot is the entry point for the ui. It defines the states at startup and handles inputs
 */
+
+class uiPage;
 
 class uiRoot{
     protected:
@@ -19,6 +22,7 @@ class uiRoot{
         unsigned long screenOnTime = 0;
         unsigned long lastDisplayFlash = 0;
         ScreenState globalDisplayState = ScreenState::on;
+        FocusState focus = FocusState::current;
         void init();
         void FlushDisplay(frameInfo* fi);
         void drawUI(frameInfo* fi);
@@ -36,5 +40,6 @@ class uiRoot{
         void setConfig(DisplayConfig _config);
         ScreenState getScreenState();
         void wakeUpScreen();
+        void receiveFocus();
 };
 

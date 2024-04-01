@@ -155,14 +155,23 @@ uiPage* page;
 
 
 void setupUI(){
+  Slog("Setup");
 
   DisplayConfig config;
 
+  Slog("Setup2");
+
   config.display = &u8g2;
+
+  Slog("Setup3");
 
   display = new uiRoot(config);
 
+  Slog("Setup4");
+
   page = new uiPage();
+
+  Slog("Setup5");
   //testBox = new uiBox(0,5,5,118,54);
   //outlineBox = new uiBox(0,0,0,128,64, false);
 
@@ -176,7 +185,10 @@ void setupUI(){
     new uiBox(10,30,20,8,false,true)
   );
 
+  Slog("Setup6");
+
   display->addPage(page);
+  Slog("Setup end");
 }
 
 
@@ -204,10 +216,12 @@ void setup() {
 
 void loop() {
   
+  
   if(!UA.executed){
     display->react(UA.action); //this needs to be done differently. react() should take the InputAction and return it!
     UA.executed = true;
   }
+  
 
   display->display();
 
