@@ -10,9 +10,9 @@ uiElements are linked in a tree like structure. Every element can have a parent 
 
 class uiElement : public dimensions{
     protected:
-        bool visible;
+        bool visible = true;
         SelectionState selected = SelectionState::notSelected;
-        bool selectable;
+        bool selectable = true;
         FocusState focus = FocusState::parent;
         uiElement* parent = nullptr;
         uiElement* child = nullptr;

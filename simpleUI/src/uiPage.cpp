@@ -16,10 +16,15 @@ void uiPage::setRoot(uiRoot* _root){
 void uiPage::receiveFocus(uiRoot* sender){
     //the focus comes from root
     switch(focus){
-        case FocusState::parent:
+        case FocusState::parent: {
             focus = FocusState::current;
-            Slog("Page has Focus.")
+            uiElement* e = elements.at(selectedChildID);
+            if(e != nullptr){
+                e->setSelected(SelectionState::showAsSelected);
+            }
+            Slog("Page has Focus.");
         break;
+        }
         case FocusState::current:
             focus = FocusState::child;
             elements.at(selectedChildID)->receiveFocus(this);
