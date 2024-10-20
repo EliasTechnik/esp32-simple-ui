@@ -1,44 +1,71 @@
-/*
+
 #include "uiText.h"
 
 //staticLabel
-template <unsigned int capacity>
-staticLabel<capacity>::staticLabel(){
-    setDimensions();
+
+StaticLabel::StaticLabel(){
+    setDimension();
     setVisible(true);
-    align = UIEalign::UIEAleft;
+    align = UIalign::UIAleft;
 };
 
-template <unsigned int capacity>
-void staticLabel<capacity>::init(char _text[capacity], unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool isVisible){
+
+void StaticLabel::init(string _text, unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool isVisible){
     text = _text;
-    setDimensions(_posX,_posY,_width,_height);
+    setDimension(_posX,_posY,_width,_height);
     setVisible(isVisible);
 };
 
-template <unsigned int capacity>
-void staticLabel<capacity>::setAlign(UIEalign _align){
+
+void StaticLabel::setAlign(UIalign _align){
     align = _align;
 };
 
-template <unsigned int capacity>
-UIEalign staticLabel<capacity>::getAlign(){
+UIalign StaticLabel::getAlign(){
     return align;
 }
 
+void StaticLabel::draw(frameInfo* f){
+    //Slog("draw2");
+    bool showSelected = (!(selected == SelectionState::notSelected)) | (selectable && (focus == FocusState::current));
+
+    if(visible){
+        f->display->drawStr(posX, posY, text.c_str)
+
+
+        if(filled){
+            if(f->highlightSelected && showSelected){
+                f->display->drawFrame(posX, posY, width, height);
+            }else{
+                f->display->drawBox(posX, posY, width, height);
+            }
+            
+        }else{
+            if(f->highlightSelected && showSelected){
+                f->display->drawBox(posX, posY, width, height);
+            }else{
+                f->display->drawFrame(posX, posY, width, height);
+            }
+        }
+    }
+    
+    
+    //for testing
+    
+    //f->display->drawBox(posX, posY, width, height);
+    //f->display->drawBox(50, 25, 5, 5);
+}
+
 //interactiveStaticLabel
-template <unsigned int capacity>
-interactiveStaticLabel<capacity>::interactiveStaticLabel(){
-    setDimensions();
-    align = UIEalign::UIEAleft;
+
+InteractiveStaticLabel::InteractiveStaticLabel(){
+    setDimension();
+    align = UIalign::UIAleft;
     setVisible(true);
 };
 
-template <unsigned int capacity>
-void interactiveStaticLabel<capacity>::init(char _text[capacity], unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool isVisible = true){
+void InteractiveStaticLabel::init(string _text, unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool isVisible = true){
     text = _text;
-    setDimensions(_posX,_posY,_width,_height);
+    setDimension(_posX,_posY,_width,_height);
     setVisible(isVisible);
 };
-
-*/

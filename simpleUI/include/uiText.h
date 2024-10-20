@@ -1,5 +1,5 @@
 
-/*
+
 #pragma once
 #include "uiBasics.h"
 #include "uiElement.h"
@@ -7,23 +7,24 @@
 #include "uiInteractive.h"
 
 
-class staticLabel: public uiElement{
+class StaticLabel: public uiElement{
     protected:
         string text;
-        UIEalign align;
+        UIalign align;
     public:
-        staticLabel();
+        StaticLabel();
         virtual void init(string _text, unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool isVisible = true);
-        void setAlign(UIEalign _align);
-        UIEalign getAlign();
+        void setAlign(UIalign _align);
+        UIalign getAlign();
+        void draw(frameInfo* f) override;  
         //TODO: setFont, setSize, setColor, setUnderline, setItallic, setBold
 };
 
-class interactiveStaticLabel: public staticLabel, public uiInteractive{
+class InteractiveStaticLabel: public StaticLabel, public uiInteractive{
     protected:
 
     public:
-        interactiveStaticLabel();
+        InteractiveStaticLabel();
         virtual void init(string _text, unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool isVisible = true);
+        void draw(frameInfo* f) override;  
 };
-*/

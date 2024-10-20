@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <U8g2lib.h>
 
+#include "uiText.h"
 #include "uiInteractive.h"
 #include "uiGraphics.h"
 #include "uiGroup.h"
@@ -25,7 +26,7 @@ unsigned long SCREEN_SLEEPTIME=20000;
 int AUTOPRESS_SPEED=50;
 int AUTOPRESS_DELAY=500;
 int DISPLAY_FRAME_DISTANCE=66;
-unsigned int DISPLAY_BLINK_DURATION=300; //ms (one half of the blink cycle)
+unsigned int DISPLAY_BLINK_DURATION=150; //ms (one half of the blink cycle)
 
 
 
@@ -176,13 +177,17 @@ void setupUI(){
   //outlineBox = new uiBox(0,0,0,128,64, false);
 
   page->addElement(
-    new uiBox(10,10,20,8,false,true)
+    new uiText()
+  )
+
+  page->addElement(
+    new uiBox(10,10,80,8,false,true)
   );
   page->addElement(
-    new uiBox(10,20,20,8,false,true)
+    new uiBox(10,20,80,8,false,true)
   );
   page->addElement(
-    new uiBox(10,30,20,8,false,true)
+    new uiBox(10,30,80,8,false,true)
   );
 
   Slog("Setup6");
