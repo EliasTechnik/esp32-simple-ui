@@ -186,6 +186,7 @@ void uiRoot::receiveFocus(){
         focus = FocusState::current;
     }else{
         //reject focus
+        Slog("rejected focus")
         focus = FocusState::child;
         pages.at(currentPage)->receiveFocus(this);
     }

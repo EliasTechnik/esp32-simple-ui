@@ -47,7 +47,7 @@ uiBox::uiBox(unsigned int _posX, unsigned int _posY, unsigned int _width, unsign
 :uiElement(_posX,_posY,_width,_height){};
 
 uiBox::uiBox(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool _filled, bool isSelectable)
-:uiElement(_posX,_posY,_width,_height,isSelectable){
+:uiElement(_posX,_posY,_width,_height,isSelectable,true){
     filled = _filled;
 };
 
@@ -71,16 +71,37 @@ void uiBox::draw(frameInfo* f){
     if(visible){
         if(filled){
             if(f->highlightSelected && showSelected){
-                f->display->drawFrame(posX, posY, width, height);
+                f->display->drawFrame(
+                    f->viewportOffset.convertX(posX),
+                    f->viewportOffset.convertY(posY), 
+                    f->viewportOffset.convertWidth(width),
+                    f->viewportOffset.convertHeight(height)
+                );
             }else{
-                f->display->drawBox(posX, posY, width, height);
+                f->display->drawBox(
+                    f->viewportOffset.convertX(posX),
+                    f->viewportOffset.convertY(posY), 
+                    f->viewportOffset.convertWidth(width),
+                    f->viewportOffset.convertHeight(height)
+                );
             }
             
         }else{
+            //not filled
             if(f->highlightSelected && showSelected){
-                f->display->drawBox(posX, posY, width, height);
+                f->display->drawBox(
+                    f->viewportOffset.convertX(posX),
+                    f->viewportOffset.convertY(posY), 
+                    f->viewportOffset.convertWidth(width),
+                    f->viewportOffset.convertHeight(height)
+                );
             }else{
-                f->display->drawFrame(posX, posY, width, height);
+                f->display->drawFrame(
+                    f->viewportOffset.convertX(posX),
+                    f->viewportOffset.convertY(posY), 
+                    f->viewportOffset.convertWidth(width),
+                    f->viewportOffset.convertHeight(height)
+                );
             }
         }
     }

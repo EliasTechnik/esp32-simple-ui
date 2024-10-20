@@ -13,18 +13,49 @@ void uiPage::setRoot(uiRoot* _root){
 }
 
 
+int uiPage::getNextSelectableChildID(){
+    int index = selectedChildID;
+    index++;
+    uiElement* e;
+    do{
+        e = elements.at(index);
+        if(e != nullptr){
+            if(e->getSelectable()){
+                return index;
+            }else{
+                index++;
+            }
+        }else{
+            index++;
+        }
+        if(index>=elements.size()){
+            index = 0;
+        }
+    }while(index != selectedChildID);
+
+    return -1;
+}
+
 void uiPage::receiveFocus(uiRoot* sender){
     //the focus comes from root
     switch(focus){
         case FocusState::parent: {
             focus = FocusState::current;
-            uiElement* e = elements.at(selectedChildID);
-            if(e != nullptr){
+            int id = getNextSelectableChildID();
+            if(id != -1){
+                selectedChildID = id;
+                uiElement* e = elements.at(selectedChildID);
                 e->setSelected(SelectionState::showAsSelected);
+            }else{
+                //no selectable child
+                Slog("no selectable child in uiPage")
+                focus = FocusState::parent;
+                root->receiveFocus();
             }
             Slog("Page has Focus.");
         break;
         }
+        //TODO: Add the above code for the folowing cases. Otherwise the page might select non selectable elements if added afterwards
         case FocusState::current:
             focus = FocusState::child;
             elements.at(selectedChildID)->receiveFocus(this);

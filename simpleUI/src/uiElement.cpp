@@ -30,6 +30,12 @@ void uiElement::setSelected(SelectionState isSelected){
 };
 
 bool uiElement::getSelectable(){
+    if(selectable){
+        Slog("selectable")
+    }else{
+        Slog("static")
+    }
+    
     return selectable;
 };
 

@@ -156,38 +156,41 @@ uiPage* page;
 
 
 void setupUI(){
-  Slog("Setup");
 
+  //create a new config
   DisplayConfig config;
 
-  Slog("Setup2");
-
+  //set the output device
   config.display = &u8g2;
+  //change the viewport offset
+  config.viewportOffset = DEFAULT_OFFSET;
 
-  Slog("Setup3");
-
+  //create a new ui root object. This is the start of the UI Tree
   display = new uiRoot(config);
 
-  Slog("Setup4");
-
+  //create a new page
   page = new uiPage();
 
-  Slog("Setup5");
   //testBox = new uiBox(0,5,5,118,54);
   //outlineBox = new uiBox(0,0,0,128,64, false);
 
+  //add some ui elements to the Page
   page->addElement(
-    new uiText()
-  )
+    new StaticLabel("Input Mode",32,0,128,32)
+  );
 
   page->addElement(
-    new uiBox(10,10,80,8,false,true)
+    new uiBox(0,0,128,64,false,false)
+  );
+
+  page->addElement(
+    new uiBox(10,10,80,8,false,false)
   );
   page->addElement(
     new uiBox(10,20,80,8,false,true)
   );
   page->addElement(
-    new uiBox(10,30,80,8,false,true)
+    new uiBox(10,30,80,8,false,false)
   );
 
   Slog("Setup6");

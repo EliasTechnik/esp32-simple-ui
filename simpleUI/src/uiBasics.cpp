@@ -54,3 +54,32 @@ void dimensions::setWidth(unsigned int _width){
 void dimensions::setHeight(unsigned int _height){
     height=_height;
 };
+
+
+Viewport::Viewport(dimensions _dimension){
+    dimension = _dimension;
+}
+
+int Viewport::convertX(int _x){
+    return _x + dimension.getX();
+}
+
+int Viewport::convertY(int _y){
+    return _y + dimension.getY();
+}
+
+int Viewport::convertWidth(int _width){
+    if(_width + dimension.getX() > dimension.getWidth()){
+        return dimension.getX() + dimension.getWidth();
+    }else{
+        return _width + dimension.getX();
+    }
+}
+
+int Viewport::convertHeight(int _height){
+     if(_height + dimension.getY() > dimension.getHeight()){
+        return dimension.getY() + dimension.getHeight();
+    }else{
+        return _height + dimension.getY();
+    }
+}

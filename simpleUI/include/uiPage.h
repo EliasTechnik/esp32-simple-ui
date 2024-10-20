@@ -13,6 +13,7 @@ class uiRoot;
 class uiPage: public uiGroup{
     protected:
         uiRoot* root;
+        int getNextSelectableChildID();
     public:    
         uiPage(); //constructor
         ~uiPage(); //destructor

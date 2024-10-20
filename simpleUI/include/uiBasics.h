@@ -53,12 +53,27 @@ class dimensions{
 };
 
 
+struct Viewport{
+    dimensions dimension;
+    Viewport();
+    Viewport(dimensions _dimension);
+    int convertX(int _x);
+    int convertY(int _y);
+    int convertWidth(int _width);
+    int convertHeight(int _height);
+};
+
+const Viewport DEFAULT_OFFSET = Viewport(dimensions(0,0,128,64));
+const Viewport ZERO_OFFSET_128_X_65 = Viewport(dimensions(0,0,128,65));
+
 /*Information about the current frame. Every draw method gets this info. */
 
 struct frameInfo{
     bool highlightSelected = false;
+    Viewport viewportOffset = DEFAULT_OFFSET;
     U8G2* display = nullptr;
 };
+
 
 enum class FocusState{parent, current, child};
 
@@ -83,8 +98,9 @@ struct uiCallback{
 
 struct DisplayConfig{
     unsigned long screenSleepTime = 20000;
-    int frameDistance = 66;
+    int frameDistance = 16;//66;
     int flashHalfCycle = 250;
     bool useSleep = true;
     U8G2* display = nullptr;
+    Viewport viewportOffset = ZERO_OFFSET_128_X_65;
 };

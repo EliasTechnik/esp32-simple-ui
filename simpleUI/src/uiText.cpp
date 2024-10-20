@@ -10,7 +10,7 @@ StaticLabel::StaticLabel(){
 };
 
 
-void StaticLabel::init(string _text, unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool isVisible){
+StaticLabel::StaticLabel(string _text, unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool isVisible){
     text = _text;
     setDimension(_posX,_posY,_width,_height);
     setVisible(isVisible);
@@ -25,13 +25,23 @@ UIalign StaticLabel::getAlign(){
     return align;
 }
 
+void StaticLabel::setFont(const uint8_t* _font){
+    font = _font;
+}
+
+void StaticLabel::setText(string _text){
+    text = _text;
+}
+
 void StaticLabel::draw(frameInfo* f){
     //Slog("draw2");
     bool showSelected = (!(selected == SelectionState::notSelected)) | (selectable && (focus == FocusState::current));
 
     if(visible){
-        f->display->drawStr(posX, posY, text.c_str)
-
+        f->display->setFont(font);
+        int height = f->display->getMaxCharHeight();
+        f->display->drawStr(f->viewportOffset.convertX(posX),f->viewportOffset.convertY(posY+height), text.c_str());
+        /*
 
         if(filled){
             if(f->highlightSelected && showSelected){
@@ -47,13 +57,8 @@ void StaticLabel::draw(frameInfo* f){
                 f->display->drawFrame(posX, posY, width, height);
             }
         }
+        */
     }
-    
-    
-    //for testing
-    
-    //f->display->drawBox(posX, posY, width, height);
-    //f->display->drawBox(50, 25, 5, 5);
 }
 
 //interactiveStaticLabel
@@ -64,7 +69,7 @@ InteractiveStaticLabel::InteractiveStaticLabel(){
     setVisible(true);
 };
 
-void InteractiveStaticLabel::init(string _text, unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool isVisible = true){
+InteractiveStaticLabel::InteractiveStaticLabel(string _text, unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool isVisible){
     text = _text;
     setDimension(_posX,_posY,_width,_height);
     setVisible(isVisible);
