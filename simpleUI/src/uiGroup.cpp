@@ -1,23 +1,27 @@
 #include "uiGroup.h"
 
-uiGroup::uiGroup():uiElement(){
+uiGroup::uiGroup():uiBaseElement(){
+    selectionMode = SelectionMode::selectable;
+    focusMode = FocusMode::target;
     //elements = new dList<uiElement>(2);
 };
 
-uiGroup::uiGroup(unsigned int expectedElements):uiElement(){
+uiGroup::uiGroup(unsigned int expectedElements):uiBaseElement(){
+    selectionMode = SelectionMode::selectable;
+    focusMode = FocusMode::target;
     //elements = new dList<uiElement>(expectedElements);
     //elements = vector<uiElement>(expectedElements,nullptr);
 }
 
-uiGroup::uiGroup(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height): uiElement(_posX, _posY, width, height, false){
+uiGroup::uiGroup(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height): uiBaseElement(_posX, _posY, width, height, SelectionMode::selectable){
     //elements = new dList<uiElement>(2);
 }
 
-uiGroup::uiGroup(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool isVisible): uiElement(_posX, _posY, width, height, false, isVisible){
+uiGroup::uiGroup(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool isVisible): uiBaseElement(_posX, _posY, width, height, SelectionMode::selectable, isVisible){
     //elements = new dList<uiElement>(2);
 }
 
-uiGroup::uiGroup(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, unsigned int expectedElements, bool isVisible): uiElement(_posX, _posY, width, height, false, isVisible){
+uiGroup::uiGroup(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, unsigned int expectedElements, bool isVisible): uiElement(_posX, _posY, width, height, SelectionMode::selectable, isVisible){
     //elements = new dList<uiElement>(expectedElements);
 }
 
@@ -43,19 +47,20 @@ void uiGroup::draw(frameInfo* f){
 }
 
 void uiGroup::react(UserAction UA){
-    //a uiGroup can not have the focus by it self. It is also not selectable.
+    int id = -2;
     switch(focus){
-        case FocusState::child:
+        case FocusState::child:{
             //we hand it down
             //get the child which has focus
-
+            Slog("group: push react to child")
             elements.at(selectedChildID)->react(UA);
 
             break;
-        case FocusState::current:
+        }
+        case FocusState::current:{
             //we handle it
             switch (UA){
-                case UserAction::backButton:
+                case UserAction::backButton:{
                     //the focus shifts back to parent
                     if(parent != nullptr){
                         focus = FocusState::parent;
@@ -64,52 +69,61 @@ void uiGroup::react(UserAction UA){
                         //onLeave() 
                     }
                     break;
-                case UserAction::enterButton:
+                }
+                case UserAction::enterButton:{
                     //child gets focus
-                    
+                    Slog("group: push focus to child")
                     focus = FocusState::child;
+                    elements.at(selectedChildID)->setSelected(SelectionState::notSelected); //remove selection. this is now the problem of the child
                     elements.at(selectedChildID)->receiveFocus(this);
                     //onLeave() ?   
                     
                     break;
-                case UserAction::leftButton:
+                }
+                case UserAction::leftButton:{
                     //previous child gets selected 
+                    Slog("group: sel priv child")
+                    id = getPriviousSelectableChildID();
 
-                    //remove selection from old child
-                    elements.at(selectedChildID)->setSelected(SelectionState::notSelected);
-
-                    if(selectedChildID == 0){
-                        selectedChildID = elements.size()-1;
+                    if(id == -1){
+                        Slog("err: No selectable child found.")
                     }else{
-                        selectedChildID--;
+                        //remove selection from old child
+                        elements.at(selectedChildID)->setSelected(SelectionState::notSelected);
+                        selectedChildID = id;
+                        elements.at(selectedChildID)->setSelected(SelectionState::showAsSelected);
                     }
-
-                    elements.at(selectedChildID)->setSelected(SelectionState::showAsSelected);
+                    
                     break;
-                case UserAction::rightButton:
+                }
+                case UserAction::rightButton:{
                     //next child gets selected 
+                    Slog("group: sel next child")
+                    id = getNextSelectableChildID();
 
-                    //remove selection from old child
-                    elements.at(selectedChildID)->setSelected(SelectionState::notSelected);
-
-                    if(selectedChildID == elements.size()-1){
-                        selectedChildID = 0;
+                    if(id == -1){
+                        Slog("err: No selectable child found.")
                     }else{
-                        selectedChildID++;
+                        //remove selection from old child
+                        elements.at(selectedChildID)->setSelected(SelectionState::notSelected);
+                        selectedChildID = id;
+                        elements.at(selectedChildID)->setSelected(SelectionState::showAsSelected);
                     }
-
-                    elements.at(selectedChildID)->setSelected(SelectionState::showAsSelected);
                     break;
-                default:
+                }
+                default:{
                     if(onInput.CB != nullptr)
                         onInput.CB;
                     break;
+                }
             }
             break;
-        default:
+        }
+        default:{
             //this should not happen
-            Slog("Error: reacted but Parent has focus!");
+            Slog("err: reacted but Parent has focus!");
             break;
+        }
     }
 }
 
@@ -122,19 +136,55 @@ void uiGroup::removeFocus(uiElement* remover){
     }
 }
 
-void uiGroup::receiveFocus(uiElement* sender){
-    //the focus comes from parent
-    switch(focus){
-        case FocusState::parent:
-            focus = FocusState::current;
-            Slog("Group has Focus.")
-        break;
-        case FocusState::current:
-            focus = FocusState::child;
-            elements.at(selectedChildID)->receiveFocus(this);
-        break;
-        case FocusState::child:
-            elements.at(selectedChildID)->receiveFocus(this);
-        break;
+
+int uiGroup::getNextSelectableChildID(){
+    int index = selectedChildID;
+    index++;
+    if(index>=elements.size()){
+            index = 0;
     }
+    uiElement* e;
+    do{
+        e = elements.at(index);
+        if(e != nullptr){
+            if(e->getSelectable()){
+                return index;
+            }else{
+                index++;
+            }
+        }else{
+            index++;
+        }
+        if(index>=elements.size()){
+            index = 0;
+        }
+    }while(index != selectedChildID);
+
+    return -1;
+}
+
+int uiGroup::getPriviousSelectableChildID(){
+    int index = selectedChildID;
+    index--;
+    if(index<0){
+        index = elements.size()-1;
+    }
+    uiElement* e;
+    do{
+        e = elements.at(index);
+        if(e != nullptr){
+            if(e->getSelectable()){
+                return index;
+            }else{
+                index--;
+            }
+        }else{
+            index--;
+        }
+        if(index<0){
+            index = elements.size()-1;
+        }
+    }while(index != selectedChildID);
+
+    return -1;
 }

@@ -6,6 +6,8 @@
 #include "uiGraphics.h"
 #include "uiGroup.h"
 #include "uiBasics.h"
+#include "uiPage.h"
+#include "uiGroup.h"
 #include "uiRoot.h"
 
 
@@ -150,13 +152,17 @@ void IRAM_ATTR b_enter_ISR(){
 
 frameInfo fi;
 uiRoot* display; 
-uiBox* testBox; 
-uiBox* outlineBox;
-uiPage* page;
+
 
 
 void setupUI(){
 
+  uiBox* testBox; 
+  uiBox* outlineBox;
+  uiPage* page1;
+  uiPage* page2;
+  uiGroup* mainPage;
+  uiGroup* secPage;
   //create a new config
   DisplayConfig config;
 
@@ -169,33 +175,60 @@ void setupUI(){
   display = new uiRoot(config);
 
   //create a new page
-  page = new uiPage();
+  //page1 = new uiPage();
+  //page2 = new uiPage();
+
+  mainPage = new uiGroup();
+  mainPage->setID("mainPage");
+  secPage = new uiGroup();
+  secPage->setID("secPage");
 
   //testBox = new uiBox(0,5,5,118,54);
   //outlineBox = new uiBox(0,0,0,128,64, false);
 
   //add some ui elements to the Page
-  page->addElement(
-    new StaticLabel("Input Mode",32,0,128,32)
+  StaticLabel * label = new StaticLabel("Input Mode",32,0,128,32);
+  label->setID("label");
+  mainPage->addElement(
+    label
   );
 
-  page->addElement(
-    new uiBox(0,0,128,64,false,false)
+  uiBox * box1 = new uiBox(0,0,128,64,false,SelectionMode::notSelectable);
+  box1->setID("box1");
+  mainPage->addElement(
+    box1
   );
 
-  page->addElement(
-    new uiBox(10,10,80,8,false,false)
+  uiBox * box2 = new uiBox(10,10,80,8,false,SelectionMode::selectable);
+  box2->setID("box2");
+  mainPage->addElement(
+    box2
   );
-  page->addElement(
-    new uiBox(10,20,80,8,false,true)
+  uiBox * box3 = new uiBox(10,20,80,8,false,SelectionMode::selectable);
+  box3->setID("box3");
+  mainPage->addElement(
+    box3
   );
-  page->addElement(
-    new uiBox(10,30,80,8,false,false)
+  
+  uiBox * box4 = new uiBox(10,30,80,8,false,SelectionMode::selectable);
+  box4->setID("box4");
+  mainPage->addElement(
+    box4
   );
+
+  secPage->addElement(
+    new StaticLabel("Test",32,0,128,32)
+  );
+  secPage->addElement(
+    new uiBox(10,20,80,8,false,SelectionMode::selectable)
+  );
+
+
 
   Slog("Setup6");
 
-  display->addPage(page);
+  display->addPage(new uiPage(mainPage));
+  display->addPage(new uiPage(secPage));
   Slog("Setup end");
 }
 

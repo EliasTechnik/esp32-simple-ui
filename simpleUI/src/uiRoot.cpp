@@ -18,6 +18,7 @@ void uiRoot::addPage(uiPage* page){
     pages.push_back(page);
     page->setRoot(this);
 
+    /*
     if(pages.size() == 1){
         uiPage* e = pages.front();
 
@@ -26,6 +27,7 @@ void uiRoot::addPage(uiPage* page){
         }
         e->receiveFocus(this);
     }
+    */
     
 }
 
@@ -59,6 +61,7 @@ void uiRoot::react(UserAction UA){
         screenSwitch(ScreenState::on);
     }else{
         if(this->focus == FocusState::current){
+            //the root has focus so we switch/enter a page
             switch (UA){
                 case UserAction::leftButton:
                     Slog("left");
@@ -77,29 +80,28 @@ void uiRoot::react(UserAction UA){
                     }
                     break;
                 case UserAction::enterButton:
+                    //we enter the page. This means the page receives focus and we switch to child
                     Slog("enter");
-                    //remove selection from old child
-                    pages.at(currentPage)->removeFocus(this);
-                    Slog("removeFocus");
-                    if(currentPage == pages.size()-1){
-                        currentPage = 0;
-                    }else{
-                        currentPage++;
-                    }
+                    //remove selection from old child //this is wrong. At this point only root should have focus
+                    //pages.at(currentPage)->removeFocus(this); //should it?
+                    //Slog("removeFocus");
+    
 
                     focus = FocusState::child;
 
-                    Slog("receiveFocus");
+                    Slog("push focus to");
                     pages.at(currentPage)->receiveFocus(this);
                     break;
                 default:
-                    //pages[currentPage]->react(UA);
                     //do nothing!
+
+                    //here a callback should be called
                     Slog("unknown action");
                     break;
             }
         }
         else{
+            //the child should react
             pages.at(currentPage)->react(UA);
         }
     }
@@ -183,12 +185,14 @@ void uiRoot::energyManager(){
 
 void uiRoot::receiveFocus(){
     if(pages.size()>1){
+        Slog("got focus")
         focus = FocusState::current;
     }else{
         //reject focus
-        Slog("rejected focus")
-        focus = FocusState::child;
-        pages.at(currentPage)->receiveFocus(this);
+        Slog("would like to reject focus")
+        focus = FocusState::current;
+        //focus = FocusState::child;
+        //pages.at(currentPage)->receiveFocus(this);
     }
     
 }

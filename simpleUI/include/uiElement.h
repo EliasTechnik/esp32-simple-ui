@@ -8,35 +8,61 @@ uiElements are linked in a tree like structure. Every element can have a parent 
 
 */
 
-class uiElement : public dimensions{
+
+class uiBaseElement : public dimensions{
     protected:
         bool visible = true;
+        String id = "";
         SelectionState selected = SelectionState::notSelected;
-        bool selectable = true;
+        SelectionMode selectionMode = SelectionMode::notSelectable;
+        FocusMode focusMode = FocusMode::passive;
         FocusState focus = FocusState::parent;
         uiElement* parent = nullptr;
         uiElement* child = nullptr;
         //uiCallback onEnter;
         //uiCallback onLeave;
-        uiCallback onInput; //gets called on eny input apart from enter or leave
+        uiCallback onInput; //gets called on any input apart from enter or leave
     public:
-        uiElement();
-        ~uiElement();
-        uiElement(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool isSelectable = false);
-        uiElement(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool isSelectable, bool isVisible);
+        uiBaseElement();
+        ~uiBaseElement();
+        uiBaseElement(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, SelectionMode _selectionMode = SelectionMode::notSelectable);
+        uiBaseElement(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, SelectionMode _selectionMode, bool isVisible);
         void setVisible(bool isVisible);
         bool getVisible();
         void setSelected(SelectionState isSelected);
         SelectionState getSelected();
-        void setSelectable(bool isSelectable);
+        void setSelectionMode(SelectionMode _selectionMode);
+        SelectionMode getSelectionMode();
         bool getSelectable();
+        void setFocusMode(FocusMode _mode);
+        FocusMode getFocusMode();
+        virtual void setParent(uiElement* _parent);
+        virtual uiElement* getParent();
+        virtual void setChild(uiElement* _child);
+        virtual uiElement* getChild();
+        virtual void draw(frameInfo* f) = 0; //should be overwritten by every child class which inherrits from uielement
+        virtual void react(UserAction UA);
+        virtual void receiveFocus(uiElement* sender);
+        FocusState getFocusState();
+        virtual void removeFocus(uiElement* remover);
+        void setID(String _id);
+};
+
+
+class uiElement : public uiBaseElement{
+    protected:
+        
+    public:
+        uiElement();
+        ~uiElement();
+        uiElement(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, SelectionMode _selectionMode = SelectionMode::notSelectable);
+        uiElement(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, SelectionMode _selectionMode, bool isVisible);
+        virtual void draw(frameInfo* f) = 0; //should be overwritten by every child class which inherrits from uielement
+        void react(UserAction UA) override;
+        void removeFocus(uiElement* remover) override;
+        void receiveFocus(uiElement* sender) override;
         void setParent(uiElement* _parent);
         uiElement* getParent();
         void setChild(uiElement* _child);
         uiElement* getChild();
-        virtual void draw(frameInfo* f) = 0; //should be overwritten by every child class which inherrits from uielement
-        void react(UserAction UA);
-        void receiveFocus(uiElement* sender);
-        FocusState getFocusState();
-        void removeFocus(uiElement* remover);
 };

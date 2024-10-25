@@ -1,7 +1,16 @@
 #include "uiPage.h"
 
-uiPage::uiPage(): uiGroup(){
+uiPage::uiPage(): uiElement(){
+    selectionMode = SelectionMode::passthroughSelection;
+    focusMode = FocusMode::passthrough;
+    focus = FocusState::parent;
+};
 
+uiPage::uiPage(uiElement* _child): uiElement(){
+    child = _child;
+    selectionMode = SelectionMode::passthroughSelection;
+    focusMode = FocusMode::passthrough;
+     focus = FocusState::parent;
 };
 
 uiPage::~uiPage(){
@@ -12,60 +21,53 @@ void uiPage::setRoot(uiRoot* _root){
     root = _root;
 }
 
-
-int uiPage::getNextSelectableChildID(){
-    int index = selectedChildID;
-    index++;
-    uiElement* e;
-    do{
-        e = elements.at(index);
-        if(e != nullptr){
-            if(e->getSelectable()){
-                return index;
-            }else{
-                index++;
-            }
-        }else{
-            index++;
-        }
-        if(index>=elements.size()){
-            index = 0;
-        }
-    }while(index != selectedChildID);
-
-    return -1;
+void uiPage::draw(frameInfo* f){
+    if(child != nullptr){
+        child->draw(f);
+    }
 }
+
 
 void uiPage::receiveFocus(uiRoot* sender){
-    //the focus comes from root
-    switch(focus){
-        case FocusState::parent: {
-            focus = FocusState::current;
-            int id = getNextSelectableChildID();
-            if(id != -1){
-                selectedChildID = id;
-                uiElement* e = elements.at(selectedChildID);
-                e->setSelected(SelectionState::showAsSelected);
-            }else{
-                //no selectable child
-                Slog("no selectable child in uiPage")
+    focus = FocusState::child;
+    root = sender;
+    Slog("relay to child");
+    child->receiveFocus(this);
+    /*
+    //page cant hold focus
+    //focus has to be relayed to child/parent
+    //the focus comes from parent
+    Slog("page cant hold focus. Focus has to be relayed to child/parent")
+    if(focus == FocusState::parent){
+         focus = FocusState::child;
+            root = sender;
+            Slog("relay to child");
+            child->receiveFocus(this);
+    }else{
+        if(focus == FocusState::current){
+        focus = FocusState::parent;
+            Slog("cant hold, relay to parent");
+            root->receiveFocus(); 
+        }else{
+            if(focus == FocusState::child){
                 focus = FocusState::parent;
+                Slog("relay to parent");
                 root->receiveFocus();
             }
-            Slog("Page has Focus.");
-        break;
         }
-        //TODO: Add the above code for the folowing cases. Otherwise the page might select non selectable elements if added afterwards
-        case FocusState::current:
-            focus = FocusState::child;
-            elements.at(selectedChildID)->receiveFocus(this);
-        break;
-        case FocusState::child:
-            elements.at(selectedChildID)->receiveFocus(this);
-        break;
-    }    
+    }
+    */
 }
 
+void uiPage::receiveFocus(uiElement* sender){
+    focus = FocusState::parent;
+    child = sender;
+    Slog("relay to parent");
+    root->receiveFocus();
+}
+
+
+/*
 void uiPage::react(UserAction ua){
     //a uiPage can have the focus by it self. But it is not selectable.
     Slog("react");
@@ -140,12 +142,14 @@ void uiPage::react(UserAction ua){
     }
 }
 
+*/
+
 void uiPage::removeFocus(uiRoot* remover){
     if(focus != FocusState::child){
-        elements.at(selectedChildID)->removeFocus(this);
+        child->removeFocus(this);
     }
     if(focus == FocusState::current){
-        elements.at(selectedChildID)->setSelected(SelectionState::notSelected);
+        child->setSelected(SelectionState::notSelected);
     }
     focus = FocusState::parent;
 }

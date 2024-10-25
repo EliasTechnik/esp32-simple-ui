@@ -7,13 +7,16 @@ StaticLabel::StaticLabel(){
     setDimension();
     setVisible(true);
     align = UIalign::UIAleft;
+    selectionMode = SelectionMode::notSelectable;
+    focusMode = FocusMode::passive;
 };
 
 
-StaticLabel::StaticLabel(string _text, unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool isVisible){
+StaticLabel::StaticLabel(string _text, unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool isVisible): 
+    uiElement(_posX, _posY, _width, _height, SelectionMode::notSelectable, isVisible)
+{
     text = _text;
-    setDimension(_posX,_posY,_width,_height);
-    setVisible(isVisible);
+    focusMode = FocusMode::passive;
 };
 
 
@@ -35,7 +38,7 @@ void StaticLabel::setText(string _text){
 
 void StaticLabel::draw(frameInfo* f){
     //Slog("draw2");
-    bool showSelected = (!(selected == SelectionState::notSelected)) | (selectable && (focus == FocusState::current));
+    bool showSelected = (selected == SelectionState::showAsSelected || selected == SelectionState::Selected);
 
     if(visible){
         f->display->setFont(font);

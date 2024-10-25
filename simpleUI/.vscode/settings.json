@@ -3,6 +3,8 @@
         "new": "cpp",
         "*.tcc": "cpp",
         "vector": "cpp",
-        "system_error": "cpp"
+        "system_error": "cpp",
+        "array": "cpp",
+        "string_view": "cpp"
     }
 }

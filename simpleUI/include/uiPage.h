@@ -10,18 +10,20 @@ A UI-Page is like a uiGroup but it covers the whole screen and only draws it chi
 
 class uiRoot;
 
-class uiPage: public uiGroup{
+class uiPage: public uiElement{
     protected:
         uiRoot* root;
-        int getNextSelectableChildID();
     public:    
         uiPage(); //constructor
+        uiPage(uiElement* _child); //constructor
         ~uiPage(); //destructor
         void setRoot(uiRoot* _root);
         //void receiveFocus(uiElement* sender);
         void receiveFocus(uiRoot* sender);
+        void receiveFocus(uiElement* sender);
         void removeFocus(uiRoot* remover);
-        void react(UserAction ua);
+        //void react(UserAction ua);
+        void draw(frameInfo* f) override;
 };
 
 

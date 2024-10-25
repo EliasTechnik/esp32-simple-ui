@@ -46,8 +46,8 @@ uiBox::uiBox() : uiElement(){
 uiBox::uiBox(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height)
 :uiElement(_posX,_posY,_width,_height){};
 
-uiBox::uiBox(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool _filled, bool isSelectable)
-:uiElement(_posX,_posY,_width,_height,isSelectable,true){
+uiBox::uiBox(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool _filled, SelectionMode _selectionMode)
+:uiElement(_posX,_posY,_width,_height, _selectionMode,true){
     filled = _filled;
 };
 
@@ -66,7 +66,7 @@ void uiBox::init(unsigned int _id, unsigned int _posX = 0, unsigned int _posY = 
 
 void uiBox::draw(frameInfo* f){
     //Slog("draw2");
-    bool showSelected = (!(selected == SelectionState::notSelected)) | (selectable && (focus == FocusState::current));
+    bool showSelected = (selected == SelectionState::showAsSelected || selected == SelectionState::Selected);
 
     if(visible){
         if(filled){
@@ -105,10 +105,4 @@ void uiBox::draw(frameInfo* f){
             }
         }
     }
-    
-    
-    //for testing
-    
-    //f->display->drawBox(posX, posY, width, height);
-    //f->display->drawBox(50, 25, 5, 5);
 }

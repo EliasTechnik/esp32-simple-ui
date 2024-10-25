@@ -75,7 +75,24 @@ struct frameInfo{
 };
 
 
-enum class FocusState{parent, current, child};
+enum class FocusState{
+    parent, //the partent element or above has focus
+    current, //this element has focus
+    child   //on of our childs has focus
+};
+
+enum class FocusMode{
+    target, //can receive focus and is selectable
+    passthrough, //can receive focus but will passthrough to its child
+    passive //can not receive focus
+};
+
+enum class SelectionMode{
+    selectable, //this component can be selected
+    passthroughSelection, //this component cant be selected but will forward its selection to its childs
+    forwardSelection, //this component can be selected and will forward its selection state to its childs
+    notSelectable //this component is not selectable
+};
 
 enum class SelectionState{notSelected, showAsSelected, Selected};
 
