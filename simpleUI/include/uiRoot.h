@@ -2,7 +2,6 @@
 #include "uiBasics.h"
 #include "uiPage.h"
 #include "uiElement.h"
-#include "uiPage.h"
 #include <vector>
 
 /*
@@ -41,5 +40,6 @@ class uiRoot{
         ScreenState getScreenState();
         void wakeUpScreen();
         void receiveFocus();
+        //uiClassHirachyType getUIClassHirachyType() override;
 };
 

@@ -68,7 +68,8 @@ This is internal and used to determ the focus position in the ui-hirachy.
 
 FocusMode can be set for each uiElement and controls how the element reacts to focus changes. The folowing modes are available:
 
-- target: The element can receive focus and is selectable.
-- passthrough: The element can receive focus but will passthrough to its child. If there is no child the focus will bounce and may lead to a crash.
-- passive: The element can not receive focus. If it does the focus wil bounce.
+- target: The element can receive focus and is selectable. It handles the selection of its childs.
+- collection: The element can receive focus and is selectable. It ends the focus tree.
+- passthrough: The element can receive focus but will passthrough to its focus-child. If there is no child the focus will bounce and may lead to a crash.
+- passive: The element can not receive focus. If it does the focus will bounce.
 

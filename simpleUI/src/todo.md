@@ -1,3 +1,0 @@
-- set parents and childs 
-- groups can have parents, pages do not
-- pages have the root as parent and can talk to them

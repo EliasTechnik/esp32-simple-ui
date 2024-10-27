@@ -81,17 +81,31 @@ enum class FocusState{
     child   //on of our childs has focus
 };
 
+String FocusStatetoString(FocusState focusState);
+
 enum class FocusMode{
     target, //can receive focus and is selectable
+    collection, //can receive focus but ends the focus tree. All of its childs will show selected.
     passthrough, //can receive focus but will passthrough to its child
     passive //can not receive focus
 };
+
+String FocusModetoString(FocusMode focusMode);
+
 
 enum class SelectionMode{
     selectable, //this component can be selected
     passthroughSelection, //this component cant be selected but will forward its selection to its childs
     forwardSelection, //this component can be selected and will forward its selection state to its childs
     notSelectable //this component is not selectable
+};
+
+String SelectionModetoString(SelectionMode selectionMode);
+
+enum class uiClassHirachyType{
+    element,
+    page,
+    root
 };
 
 enum class SelectionState{notSelected, showAsSelected, Selected};

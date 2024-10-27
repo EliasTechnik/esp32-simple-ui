@@ -83,3 +83,32 @@ int Viewport::convertHeight(int _height){
         return _height + dimension.getY();
     }
 }
+
+String SelectionModetoString(SelectionMode selectionMode){
+    switch(selectionMode){
+        case SelectionMode::selectable: return "selectable";
+        case SelectionMode::notSelectable: return "notSelectable";
+        case SelectionMode::passthroughSelection: return "passthroughSelection";
+        case SelectionMode::forwardSelection: return "forwardSelection";
+        default: return "unknown";
+    }
+}
+
+String FocusModetoString(FocusMode focusMode){
+    switch(focusMode){
+        case FocusMode::target: return "target";
+        case FocusMode::collection: return "collection";
+        case FocusMode::passthrough: return "passthrough";
+        case FocusMode::passive: return "passive";
+        default: return "unknown";
+    }
+}
+
+String FocusStatetoString(FocusState focusState){
+    switch(focusState){
+        case FocusState::parent: return "parent";
+        case FocusState::current: return "current";
+        case FocusState::child: return "child";
+        default: return "unknown";
+    }
+}

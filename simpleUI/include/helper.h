@@ -1,5 +1,6 @@
 #pragma once
 #include <Arduino.h>
+#include <vector>
 
 #ifndef __FUNCTION_NAME__
     #ifdef WIN32   //WINDOWS
@@ -18,7 +19,7 @@ inline void slog(String file, int line, String functionname, String message){
 
 inline void slog(String file, int line, String functionname, String message, String sender){
   String msg;
-  msg = "["+file+":"+line+":<"+functionname+">] <"+sender+">"+message;
+  msg = "["+file+":"+line+":<"+functionname+">] {"+sender+"} "+message;
   Serial.println(msg);
 };
 

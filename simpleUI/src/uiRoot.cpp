@@ -194,5 +194,11 @@ void uiRoot::receiveFocus(){
         //focus = FocusState::child;
         //pages.at(currentPage)->receiveFocus(this);
     }
-    
+   
 }
+
+/*
+uiClassHirachyType uiPage::getUIClassHirachyType(){
+    return uiClassHirachyType::root;
+}
+*/

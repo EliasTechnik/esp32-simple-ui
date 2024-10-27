@@ -4,11 +4,10 @@
 #include "uiText.h"
 #include "uiInteractive.h"
 #include "uiGraphics.h"
-#include "uiGroup.h"
 #include "uiBasics.h"
 #include "uiPage.h"
-#include "uiGroup.h"
 #include "uiRoot.h"
+#include "uiPrebuilds.h"
 
 
 //Pin Config
@@ -159,10 +158,6 @@ void setupUI(){
 
   uiBox* testBox; 
   uiBox* outlineBox;
-  uiPage* page1;
-  uiPage* page2;
-  uiGroup* mainPage;
-  uiGroup* secPage;
   //create a new config
   DisplayConfig config;
 
@@ -178,9 +173,9 @@ void setupUI(){
   //page1 = new uiPage();
   //page2 = new uiPage();
 
-  mainPage = new uiGroup();
+  uiSelectGroup* mainPage = new uiSelectGroup();
   mainPage->setID("mainPage");
-  secPage = new uiGroup();
+  uiSelectGroup* secPage = new uiSelectGroup();
   secPage->setID("secPage");
 
   //testBox = new uiBox(0,5,5,118,54);
@@ -189,37 +184,37 @@ void setupUI(){
   //add some ui elements to the Page
   StaticLabel * label = new StaticLabel("Input Mode",32,0,128,32);
   label->setID("label");
-  mainPage->addElement(
+  mainPage->addChild(
     label
   );
 
   uiBox * box1 = new uiBox(0,0,128,64,false,SelectionMode::notSelectable);
   box1->setID("box1");
-  mainPage->addElement(
+  mainPage->addChild(
     box1
   );
 
   uiBox * box2 = new uiBox(10,10,80,8,false,SelectionMode::selectable);
   box2->setID("box2");
-  mainPage->addElement(
-    box2
+  mainPage->addChild(
+    box2,true
   );
   uiBox * box3 = new uiBox(10,20,80,8,false,SelectionMode::selectable);
   box3->setID("box3");
-  mainPage->addElement(
+  mainPage->addChild(
     box3
   );
   
   uiBox * box4 = new uiBox(10,30,80,8,false,SelectionMode::selectable);
   box4->setID("box4");
-  mainPage->addElement(
+  mainPage->addChild(
     box4
   );
 
-  secPage->addElement(
+  secPage->addChild(
     new StaticLabel("Test",32,0,128,32)
   );
-  secPage->addElement(
+  secPage->addChild(
     new uiBox(10,20,80,8,false,SelectionMode::selectable)
   );
 
@@ -227,8 +222,19 @@ void setupUI(){
 
   Slog("Setup6");
 
-  display->addPage(new uiPage(mainPage));
-  display->addPage(new uiPage(secPage));
+  uiPage* page1 = new uiPage(mainPage);
+  page1->setID("page1");
+  uiPage* page2 = new uiPage(secPage);
+  page2->setID("page2");
+
+  display->addPage(page1);
+  display->addPage(page2);
+
+  Slog(page1->getConfig());
+  Slog(page2->getConfig());
+  Slog(mainPage->getConfig());
+  Slog(secPage->getConfig());
+
   Slog("Setup end");
 }
 

@@ -38,11 +38,11 @@ class uiBox: public uiElement{
     protected:
         byte borderWidth = 1;
         bool filled = true;
+        void drawThis(frameInfo* f) override; 
     public:
         uiBox();
         uiBox(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height);
         uiBox(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool _filled, SelectionMode SelectionMode = SelectionMode::notSelectable);
         ~uiBox();
         //virtual void init(unsigned int _id, unsigned int _posX = 0, unsigned int _posY = 0, unsigned int _width = 0, unsigned int _height = 0, bool isVisible = true);
-        void draw(frameInfo* f) override;    
 };

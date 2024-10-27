@@ -41,14 +41,30 @@ void interactiveIcon::init(unsigned char* _bitmap, unsigned int _posX = 0, unsig
 //uiBox
 
 uiBox::uiBox() : uiElement(){
+    selectionMode = SelectionMode::notSelectable;
+    focusMode = FocusMode::passive;
+    focus = FocusState::parent;
+    visible = true;
+    id = "uiBox";
 }
 
 uiBox::uiBox(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height)
-:uiElement(_posX,_posY,_width,_height){};
+:uiElement(_posX,_posY,_width,_height){
+    selectionMode = SelectionMode::notSelectable;
+    focusMode = FocusMode::passive;
+    focus = FocusState::parent;
+    visible = true;
+    id = "uiBox";
+};
 
 uiBox::uiBox(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool _filled, SelectionMode _selectionMode)
 :uiElement(_posX,_posY,_width,_height, _selectionMode,true){
     filled = _filled;
+    selectionMode = _selectionMode;
+    focusMode = FocusMode::passive;
+    focus = FocusState::parent;
+    visible = true;
+    id = "uiBox";
 };
 
 uiBox::~uiBox(){
@@ -64,7 +80,7 @@ void uiBox::init(unsigned int _id, unsigned int _posX = 0, unsigned int _posY = 
 }
 */
 
-void uiBox::draw(frameInfo* f){
+void uiBox::drawThis(frameInfo* f){
     //Slog("draw2");
     bool showSelected = (selected == SelectionState::showAsSelected || selected == SelectionState::Selected);
 

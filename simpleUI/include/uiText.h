@@ -10,12 +10,12 @@ class StaticLabel: public uiElement{
         string text;
         UIalign align;
         const uint8_t* font = u8g2_font_5x7_tf;
+        void drawThis(frameInfo* f) override;  
     public:
         StaticLabel();
         StaticLabel(string _text, unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool isVisible = true);
         void setAlign(UIalign _align);
         UIalign getAlign();
-        void draw(frameInfo* f) override;  
         void setText(string _text);
         void setFont(const uint8_t* _font = u8g2_font_5x7_tf);
         //TODO: setFont, setSize, setColor, setUnderline, setItallic, setBold
@@ -23,9 +23,9 @@ class StaticLabel: public uiElement{
 
 class InteractiveStaticLabel: public StaticLabel, public uiInteractive{
     protected:
-
+        void drawThis(frameInfo* f) override;  
     public:
         InteractiveStaticLabel();
         InteractiveStaticLabel(string _text, unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool isVisible = true);
-        void draw(frameInfo* f) override;  
+        
 };

@@ -4,35 +4,31 @@ uiPage::uiPage(): uiElement(){
     selectionMode = SelectionMode::passthroughSelection;
     focusMode = FocusMode::passthrough;
     focus = FocusState::parent;
+    visible = true;
+    id = "uiPage";
 };
 
 uiPage::uiPage(uiElement* _child): uiElement(){
-    child = _child;
+    addChild(_child, true);
     selectionMode = SelectionMode::passthroughSelection;
     focusMode = FocusMode::passthrough;
-     focus = FocusState::parent;
+    focus = FocusState::parent;
+    visible = true;
+    id = "uiPage";
 };
 
 uiPage::~uiPage(){
-
 };
 
 void uiPage::setRoot(uiRoot* _root){
     root = _root;
 }
 
-void uiPage::draw(frameInfo* f){
-    if(child != nullptr){
-        child->draw(f);
-    }
-}
-
-
 void uiPage::receiveFocus(uiRoot* sender){
     focus = FocusState::child;
-    root = sender;
-    Slog("relay to child");
-    child->receiveFocus(this);
+    S_log("uiPage: relay to child",id);
+    childWithFocus = focusChild;
+    focusChild->receiveFocus(this);
     /*
     //page cant hold focus
     //focus has to be relayed to child/parent
@@ -61,11 +57,15 @@ void uiPage::receiveFocus(uiRoot* sender){
 
 void uiPage::receiveFocus(uiElement* sender){
     focus = FocusState::parent;
-    child = sender;
-    Slog("relay to parent");
+    S_log("uiPage: relay to parent",id);
     root->receiveFocus();
-}
+};
 
+uiClassHirachyType uiPage::getUIClassHirachyType(){
+    return uiClassHirachyType::page;
+};
+
+//(void selectFocusReceiverMethod(uiElement* receiver);
 
 /*
 void uiPage::react(UserAction ua){
@@ -143,13 +143,3 @@ void uiPage::react(UserAction ua){
 }
 
 */
-
-void uiPage::removeFocus(uiRoot* remover){
-    if(focus != FocusState::child){
-        child->removeFocus(this);
-    }
-    if(focus == FocusState::current){
-        child->setSelected(SelectionState::notSelected);
-    }
-    focus = FocusState::parent;
-}

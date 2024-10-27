@@ -6,17 +6,25 @@
 StaticLabel::StaticLabel(){
     setDimension();
     setVisible(true);
-    align = UIalign::UIAleft;
     selectionMode = SelectionMode::notSelectable;
     focusMode = FocusMode::passive;
+    focus = FocusState::parent;
+    visible = true;
+    id = "uiStaticLabel";
+    align = UIalign::UIAleft;
 };
 
 
 StaticLabel::StaticLabel(string _text, unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool isVisible): 
     uiElement(_posX, _posY, _width, _height, SelectionMode::notSelectable, isVisible)
 {
-    text = _text;
+    selectionMode = SelectionMode::notSelectable;
     focusMode = FocusMode::passive;
+    focus = FocusState::parent;
+    visible = true;
+    id = "uiStaticLabel";
+    text = _text;
+    align = UIalign::UIAleft;
 };
 
 
@@ -36,7 +44,7 @@ void StaticLabel::setText(string _text){
     text = _text;
 }
 
-void StaticLabel::draw(frameInfo* f){
+void StaticLabel::drawThis(frameInfo* f){
     //Slog("draw2");
     bool showSelected = (selected == SelectionState::showAsSelected || selected == SelectionState::Selected);
 

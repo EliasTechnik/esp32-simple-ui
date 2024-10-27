@@ -1,6 +1,6 @@
 #pragma once
 #include "uiBasics.h"
-#include "uiGroup.h"
+#include "uiElement.h"
 #include "uiRoot.h"
 
 
@@ -13,6 +13,7 @@ class uiRoot;
 class uiPage: public uiElement{
     protected:
         uiRoot* root;
+        //void selectFocusReceiverMethod(uiElement* receiver);
     public:    
         uiPage(); //constructor
         uiPage(uiElement* _child); //constructor
@@ -20,10 +21,9 @@ class uiPage: public uiElement{
         void setRoot(uiRoot* _root);
         //void receiveFocus(uiElement* sender);
         void receiveFocus(uiRoot* sender);
-        void receiveFocus(uiElement* sender);
-        void removeFocus(uiRoot* remover);
+        void receiveFocus(uiElement* sender) override;
+        uiClassHirachyType getUIClassHirachyType();
         //void react(UserAction ua);
-        void draw(frameInfo* f) override;
 };
 
 
