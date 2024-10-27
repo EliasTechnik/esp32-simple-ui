@@ -13,7 +13,7 @@ uiElements are linked in a tree like structure. Every element can have a parent 
 //class uiPage;
 
 
-class uiElement : public Dimensions{
+class uiElement : {
     protected:
         bool visible = true;
         uiElement* focusChild = nullptr;
