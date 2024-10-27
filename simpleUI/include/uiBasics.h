@@ -31,26 +31,38 @@ struct tabPos{
 
 /*Every UI Element has dimensions defined as rectangle. posX and posY define the upper left corner of that element.*/
 
-class Dimensions{
+class Position{
     protected:
         unsigned int posX;
         unsigned int posY;
-        unsigned int width;
-        unsigned int height;
     public:
-        Dimensions();
-        ~Dimensions();
-        Dimensions(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height);
+        Position();
+        ~Position();
+        Position(unsigned int _posX, unsigned int _posY);
         unsigned int getX();
         unsigned int getY();
-        unsigned int getWidth();
-        unsigned int getHeight();
-        void setDimension(unsigned int _posX = 0, unsigned int _posY = 0, unsigned int _width = 0, unsigned int _height = 0);
+        void setPosition(unsigned int _posX = 0, unsigned int _posY = 0);
         void setPosX(unsigned int _posX = 0);
         void setPosY(unsigned int _posY = 0);
-        void setWidth(unsigned int _width = 0);
-        void setHeight(unsigned int _height = 0);
 };
+
+
+
+class Sizing{
+    protected:
+        int width;
+        int height;
+    public:
+        Sizing();
+        ~Sizing();
+        Sizing(int _width, int _height);
+        int getWidth();
+        int getHeight();
+        void setSizing(int _width = 0, int _height = 0);
+        void setWidth(int _width = 0);
+        void setHeight(int _height = 0);
+};
+
 
 struct Padding{
     unsigned int top = 1;
@@ -60,27 +72,20 @@ struct Padding{
 };
 
 
-struct Sizing{
-    unsigned int width=0;
-    int height=0;
-    Sizing();
-    Sizing(unsigned int _width, int _height);
-    Dimensions toDimensions(Dimensions* d);
-};
 
 
 struct Viewport{
-    Dimensions dimension;
+    Sizing sizing;
     Viewport();
-    Viewport(Dimensions _dimension);
+    Viewport(Sizing _sizing);
     int convertX(int _x);
     int convertY(int _y);
     int convertWidth(int _width);
     int convertHeight(int _height);
 };
 
-const Viewport DEFAULT_OFFSET = Viewport(Dimensions(0,0,128,64));
-const Viewport ZERO_OFFSET_128_X_65 = Viewport(Dimensions(0,0,128,65));
+const Viewport DEFAULT_OFFSET = Viewport(Sizing(128,64));
+const Viewport ZERO_OFFSET_128_X_65 = Viewport(Sizing(128,65));
 
 /*Information about the current frame. Every draw method gets this info. */
 
