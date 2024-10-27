@@ -1,9 +1,63 @@
 
 #include "uiText.h"
 
+//uiText
+
+uiText::uiText(){
+    text = "";
+    align = UIalign::UIAleft;
+}
+
+uiText::uiText(string _text){
+    text = _text;
+    align = UIalign::UIAleft;
+}
+
+uiText::uiText(string _text, UIalign _align){
+    text = "";
+    align = _align;
+}
+
+void uiText::setAlign(UIalign _align){
+    align = _align;
+};
+
+UIalign uiText::getAlign(){
+    return align;
+}
+
+void uiText::setFont(const uint8_t* _font){
+    font = _font;
+}
+
+void uiText::setText(string _text){
+    text = _text;
+}
+
+void uiText::drawText(frameInfo* f, uiVisualTransformation* vt, Dimensions* d){
+    f->display->setFont(font);
+    int height = f->display->getMaxCharHeight();
+    if(vt->invertedContent){
+        f->display->setFontMode(1); //https://github.com/olikraus/u8g2/wiki/u8g2reference#setdrawcolor
+    }else{
+        f->display->setFontMode(0);
+    }
+    f->display->drawStr(f->viewportOffset.convertX(d->getX()),f->viewportOffset.convertY(d->getY()+height), text.c_str());
+}
+
+Sizing uiText::getTextSizing(frameInfo* f){
+    f->display->setFont(font);
+    Sizing s = Sizing(f->display->getStrWidth(text.c_str()),f->display->getAscent()-f->display->getDescent());
+    return s;
+}
+
+
+
+
+
 //staticLabel
 
-StaticLabel::StaticLabel(){
+uiStaticLabel::uiStaticLabel(){
     setDimension();
     setVisible(true);
     selectionMode = SelectionMode::notSelectable;
@@ -15,7 +69,7 @@ StaticLabel::StaticLabel(){
 };
 
 
-StaticLabel::StaticLabel(string _text, unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool isVisible): 
+uiStaticLabel::uiStaticLabel(string _text, unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool isVisible): 
     uiElement(_posX, _posY, _width, _height, SelectionMode::notSelectable, isVisible)
 {
     selectionMode = SelectionMode::notSelectable;
@@ -28,23 +82,23 @@ StaticLabel::StaticLabel(string _text, unsigned int _posX, unsigned int _posY, u
 };
 
 
-void StaticLabel::setAlign(UIalign _align){
+void uiStaticLabel::setAlign(UIalign _align){
     align = _align;
 };
 
-UIalign StaticLabel::getAlign(){
+UIalign uiStaticLabel::getAlign(){
     return align;
 }
 
-void StaticLabel::setFont(const uint8_t* _font){
+void uiStaticLabel::setFont(const uint8_t* _font){
     font = _font;
 }
 
-void StaticLabel::setText(string _text){
+void uiStaticLabel::setText(string _text){
     text = _text;
 }
 
-void StaticLabel::drawThis(frameInfo* f){
+void uiStaticLabel::drawThis(frameInfo* f){
     //Slog("draw2");
     bool showSelected = (selected == SelectionState::showAsSelected || selected == SelectionState::Selected);
 

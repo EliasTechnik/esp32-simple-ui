@@ -13,7 +13,7 @@ uiElements are linked in a tree like structure. Every element can have a parent 
 //class uiPage;
 
 
-class uiElement : public dimensions{
+class uiElement : public Dimensions{
     protected:
         bool visible = true;
         uiElement* focusChild = nullptr;
@@ -35,6 +35,7 @@ class uiElement : public dimensions{
         virtual void drawThis(frameInfo* f); //should be overwritten by every child class which inherrits from uielement
         void drawChilds(frameInfo* f);
         int getChildIndex(uiElement* child);
+        void setChildSelection(bool ignoreFocusChild);
         virtual void selectFocusReceiverMethod(uiElement* receiver);
     public:
         uiElement();

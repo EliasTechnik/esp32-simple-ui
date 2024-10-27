@@ -156,8 +156,8 @@ uiRoot* display;
 
 void setupUI(){
 
-  uiBox* testBox; 
-  uiBox* outlineBox;
+  uiInteractiveBox* testBox; 
+  uiInteractiveBox* outlineBox;
   //create a new config
   DisplayConfig config;
 
@@ -182,40 +182,40 @@ void setupUI(){
   //outlineBox = new uiBox(0,0,0,128,64, false);
 
   //add some ui elements to the Page
-  StaticLabel * label = new StaticLabel("Input Mode",32,0,128,32);
+  uiStaticLabel * label = new uiStaticLabel("Input Mode",32,0,128,32);
   label->setID("label");
   mainPage->addChild(
     label
   );
 
-  uiBox * box1 = new uiBox(0,0,128,64,false,SelectionMode::notSelectable);
+  uiInteractiveBox * box1 = new uiInteractiveBox(0,0,128,64,false,SelectionMode::notSelectable);
   box1->setID("box1");
   mainPage->addChild(
     box1
   );
 
-  uiBox * box2 = new uiBox(10,10,80,8,false,SelectionMode::selectable);
+  uiInteractiveBox * box2 = new uiInteractiveBox(10,10,80,8,false,SelectionMode::selectable);
   box2->setID("box2");
   mainPage->addChild(
     box2,true
   );
-  uiBox * box3 = new uiBox(10,20,80,8,false,SelectionMode::selectable);
+  uiInteractiveBox * box3 = new uiInteractiveBox(10,20,80,8,false,SelectionMode::selectable);
   box3->setID("box3");
   mainPage->addChild(
     box3
   );
   
-  uiBox * box4 = new uiBox(10,30,80,8,false,SelectionMode::selectable);
+  uiInteractiveBox * box4 = new uiInteractiveBox(10,30,80,8,false,SelectionMode::selectable);
   box4->setID("box4");
   mainPage->addChild(
     box4
   );
 
   secPage->addChild(
-    new StaticLabel("Test",32,0,128,32)
+    new uiStaticLabel("Test",32,0,128,32)
   );
   secPage->addChild(
-    new uiBox(10,20,80,8,false,SelectionMode::selectable)
+    new uiInteractiveBox(10,20,80,8,false,SelectionMode::selectable)
   );
 
 

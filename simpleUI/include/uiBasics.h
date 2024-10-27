@@ -31,16 +31,16 @@ struct tabPos{
 
 /*Every UI Element has dimensions defined as rectangle. posX and posY define the upper left corner of that element.*/
 
-class dimensions{
+class Dimensions{
     protected:
         unsigned int posX;
         unsigned int posY;
         unsigned int width;
         unsigned int height;
     public:
-        dimensions();
-        ~dimensions();
-        dimensions(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height);
+        Dimensions();
+        ~Dimensions();
+        Dimensions(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height);
         unsigned int getX();
         unsigned int getY();
         unsigned int getWidth();
@@ -52,19 +52,35 @@ class dimensions{
         void setHeight(unsigned int _height = 0);
 };
 
+struct Padding{
+    unsigned int top = 1;
+    unsigned int start = 1;
+    unsigned int end = 1;
+    unsigned int bottom = 1;
+};
+
+
+struct Sizing{
+    unsigned int width=0;
+    int height=0;
+    Sizing();
+    Sizing(unsigned int _width, int _height);
+    Dimensions toDimensions(Dimensions* d);
+};
+
 
 struct Viewport{
-    dimensions dimension;
+    Dimensions dimension;
     Viewport();
-    Viewport(dimensions _dimension);
+    Viewport(Dimensions _dimension);
     int convertX(int _x);
     int convertY(int _y);
     int convertWidth(int _width);
     int convertHeight(int _height);
 };
 
-const Viewport DEFAULT_OFFSET = Viewport(dimensions(0,0,128,64));
-const Viewport ZERO_OFFSET_128_X_65 = Viewport(dimensions(0,0,128,65));
+const Viewport DEFAULT_OFFSET = Viewport(Dimensions(0,0,128,64));
+const Viewport ZERO_OFFSET_128_X_65 = Viewport(Dimensions(0,0,128,65));
 
 /*Information about the current frame. Every draw method gets this info. */
 
@@ -134,4 +150,11 @@ struct DisplayConfig{
     bool useSleep = true;
     U8G2* display = nullptr;
     Viewport viewportOffset = ZERO_OFFSET_128_X_65;
+};
+
+struct uiVisualTransformation{
+    bool invertedContent = false;
+    bool invertedBackground = false;
+    uiVisualTransformation();
+    uiVisualTransformation(bool _invertedContent, bool _invertedBackground);
 };

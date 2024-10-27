@@ -2,7 +2,7 @@
 #include "uiPage.h"
 
 //uiBaseElement
-uiElement::uiElement() : dimensions(){
+uiElement::uiElement() : Dimensions(){
     visible = true;
 };
 
@@ -16,11 +16,11 @@ uiElement::~uiElement(){
     }
 };
 
-uiElement::uiElement(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, SelectionMode _selectionMode) : dimensions(_posX, _posY, _width, _height){
+uiElement::uiElement(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, SelectionMode _selectionMode) : Dimensions(_posX, _posY, _width, _height){
     selectionMode = _selectionMode;
 };
 
-uiElement::uiElement(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, SelectionMode _selectionMode, bool isVisible) : dimensions(_posX, _posY, _width, _height){
+uiElement::uiElement(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, SelectionMode _selectionMode, bool isVisible) : Dimensions(_posX, _posY, _width, _height){
     visible = isVisible;
     selectionMode = _selectionMode;
 };
@@ -300,6 +300,46 @@ void uiElement::selectFocusReceiverMethod(uiElement* receiver){
     };
 }
 
+void uiElement::setChildSelection(bool ignoreFocusChild){
+    //set selection
+    if(focusChild != nullptr){
+        if(focusChild->getSelectable()){
+            childs.at(selectedChildID)->setSelected(SelectionState::notSelected);
+            selectedChildID = getChildIndex(focusChild);
+            focusChild->setSelected(SelectionState::showAsSelected);
+        }else{
+            S_log("err: focusChild is not selectable. Fallback to first selectable child",id)
+            int cid = getNextSelectableChildID();
+
+            if(cid == -1){
+                S_log("err: No selectable child found. Bouncing to Parent",id)
+                focus = FocusState::parent;
+                selectFocusReceiverMethod(parent);
+            }else{
+                //remove selection from old child
+                childs.at(selectedChildID)->setSelected(SelectionState::notSelected);
+                selectedChildID = cid;
+                childs.at(selectedChildID)->setSelected(SelectionState::showAsSelected);
+            }
+        }
+        }else{
+        S_log("err: no focusChild. Fallback to first selectable child",id)
+        int cid = getNextSelectableChildID();
+
+        if(cid == -1){
+            S_log("err: No selectable child found. Bouncing to Parent",id)
+            focus = FocusState::parent;
+            selectFocusReceiverMethod(parent);
+            //parent->receiveFocus(this);
+        }else{
+            //remove selection from old child
+            childs.at(selectedChildID)->setSelected(SelectionState::notSelected);
+            selectedChildID = cid;
+            childs.at(selectedChildID)->setSelected(SelectionState::showAsSelected);
+        }
+    }
+}
+
 void uiElement::receiveFocus(uiElement* sender){ //todo
     S_log("received focus",id)
     //check the focus mode
@@ -310,53 +350,19 @@ void uiElement::receiveFocus(uiElement* sender){ //todo
                 case FocusState::child:
                     S_log("has focus, came from child",id)
                     focus = FocusState::current;
+                    //set selction
+                    setChildSelection(true); //select previous selected child
                     break;
                 case FocusState::current:
                     //this should not happen
                     S_log("err: Received focus but already had it.",id)
                     break;
                 case FocusState::parent:
-                     S_log("has focus, came from parent",id)
-                     focus = FocusState::current;
-                     //set selection
-                     if(focusChild != nullptr){
-                        if(focusChild->getSelectable()){
-                            childs.at(selectedChildID)->setSelected(SelectionState::notSelected);
-                            selectedChildID = getChildIndex(focusChild);
-                            focusChild->setSelected(SelectionState::showAsSelected);
-                        }else{
-                            S_log("err: focusChild is not selectable. Fallback to first selectable child",id)
-                            int cid = getNextSelectableChildID();
-
-                            if(cid == -1){
-                                S_log("err: No selectable child found. Bouncing to Parent",id)
-                                focus = FocusState::parent;
-                                parent = sender;
-                                parent->receiveFocus(this);
-                            }else{
-                                //remove selection from old child
-                                childs.at(selectedChildID)->setSelected(SelectionState::notSelected);
-                                selectedChildID = cid;
-                                childs.at(selectedChildID)->setSelected(SelectionState::showAsSelected);
-                            }
-                        }
-                     }else{
-                        S_log("err: no focusChild. Fallback to first selectable child",id)
-                        int cid = getNextSelectableChildID();
-
-                        if(cid == -1){
-                            S_log("err: No selectable child found. Bouncing to Parent",id)
-                            focus = FocusState::parent;
-                            selectFocusReceiverMethod(parent);
-                            //parent->receiveFocus(this);
-                        }else{
-                            //remove selection from old child
-                            childs.at(selectedChildID)->setSelected(SelectionState::notSelected);
-                            selectedChildID = cid;
-                            childs.at(selectedChildID)->setSelected(SelectionState::showAsSelected);
-                        }
-                     }
-                     break;
+                    S_log("has focus, came from parent",id)
+                    focus = FocusState::current;
+                    //set selection
+                    setChildSelection(false); //select focus child
+                    break;
             }
             break;
         case FocusMode::collection:
@@ -416,7 +422,7 @@ void uiElement::receiveFocus(uiElement* sender){ //todo
                 }
             break;
         case FocusMode::passive:
-            S_log("err: Received focus but this element is passive.",id)
+            S_log("err: Received focus but this element is passive. Focus gets bounced.",id)
             selectFocusReceiverMethod(parent);
             //parent->receiveFocus(this);
             break;

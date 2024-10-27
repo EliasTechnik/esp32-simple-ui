@@ -1,62 +1,62 @@
 #include "uiBasics.h"
 
 //dimmensions
-dimensions::dimensions(){
+Dimensions::Dimensions(){
     posX=0;
     posY=0;
     width=0;
     height=0;
 };
 
-dimensions::dimensions(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height){
+Dimensions::Dimensions(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height){
     this->setDimension(_posX,_posY,_width,_height);
 }
 
-dimensions::~dimensions(){
+Dimensions::~Dimensions(){
 
 };
 
-unsigned int dimensions::getX(){
+unsigned int Dimensions::getX(){
     return posX;
 };
 
-unsigned int dimensions::getY(){
+unsigned int Dimensions::getY(){
     return posY;
 };
 
-unsigned int dimensions::getWidth(){
+unsigned int Dimensions::getWidth(){
     return width;
 };
 
-unsigned int dimensions::getHeight(){
+unsigned int Dimensions::getHeight(){
     return height;
 };
 
-void dimensions::setDimension(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height){
+void Dimensions::setDimension(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height){
     posX=_posX;
     posY=_posY;
     width=_width;
     height=_height;
 };
 
-void dimensions::setPosX(unsigned int _posX){
+void Dimensions::setPosX(unsigned int _posX){
     posX=_posX;
 };
 
-void dimensions::setPosY(unsigned int _posY){
+void Dimensions::setPosY(unsigned int _posY){
     posY=_posY;
 };
 
-void dimensions::setWidth(unsigned int _width){
+void Dimensions::setWidth(unsigned int _width){
     width=_width;
 };
 
-void dimensions::setHeight(unsigned int _height){
+void Dimensions::setHeight(unsigned int _height){
     height=_height;
 };
 
 
-Viewport::Viewport(dimensions _dimension){
+Viewport::Viewport(Dimensions _dimension){
     dimension = _dimension;
 }
 
@@ -111,4 +111,33 @@ String FocusStatetoString(FocusState focusState){
         case FocusState::child: return "child";
         default: return "unknown";
     }
+}
+
+Sizing::Sizing(){
+    width = 0;
+    height = 0;
+};
+
+Sizing::Sizing(unsigned int _width, int _height){
+    width = _width;
+    height = _height;
+}
+
+Dimensions Sizing::toDimensions(Dimensions* d){
+    Dimensions dim;
+    dim.setPosX(d->getX());
+    dim.setPosY(d->getY());
+    dim.setWidth(width);
+    dim.setHeight(height);
+    return dim;
+}
+
+uiVisualTransformation::uiVisualTransformation(){
+    invertedBackground = false;
+    invertedContent = false;
+}
+
+uiVisualTransformation::uiVisualTransformation(bool _invertedContent, bool _invertedBackground){
+    invertedBackground = _invertedBackground;
+    invertedContent = _invertedContent;
 }

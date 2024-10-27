@@ -34,15 +34,28 @@ class glyph : public uiElement{
 
 */
 
-class uiBox: public uiElement{
+class uiBox{
+    protected:
+        unsigned int borderWidth = 1;
+        bool filled = true;
+        void drawBox(frameInfo* f, uiVisualTransformation* vt, Dimensions* d);
+    public:
+        uiBox();
+        uiBox(bool _filled);
+        uiBox(unsigned int _borderWidth);
+        void setBorderWidth(unsigned int _borderWidth);
+        void setFilled(bool _filled);
+};
+
+class uiInteractiveBox: public uiElement{
     protected:
         byte borderWidth = 1;
         bool filled = true;
         void drawThis(frameInfo* f) override; 
     public:
-        uiBox();
-        uiBox(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height);
-        uiBox(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool _filled, SelectionMode SelectionMode = SelectionMode::notSelectable);
-        ~uiBox();
+        uiInteractiveBox();
+        uiInteractiveBox(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height);
+        uiInteractiveBox(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool _filled, SelectionMode SelectionMode = SelectionMode::notSelectable);
+        ~uiInteractiveBox();
         //virtual void init(unsigned int _id, unsigned int _posX = 0, unsigned int _posY = 0, unsigned int _width = 0, unsigned int _height = 0, bool isVisible = true);
 };
