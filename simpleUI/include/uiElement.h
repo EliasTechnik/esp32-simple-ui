@@ -13,7 +13,7 @@ uiElements are linked in a tree like structure. Every element can have a parent 
 //class uiPage;
 
 
-class uiElement : {
+class uiElement{
     protected:
         bool visible = true;
         uiElement* focusChild = nullptr;
@@ -40,8 +40,7 @@ class uiElement : {
     public:
         uiElement();
         ~uiElement();
-        uiElement(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, SelectionMode _selectionMode = SelectionMode::notSelectable);
-        uiElement(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, SelectionMode _selectionMode, bool isVisible);
+        uiElement(SelectionMode _selectionMode, bool isVisible);
         void setVisible(bool isVisible);
         bool getVisible();
         bool setSelected(SelectionState isSelected);

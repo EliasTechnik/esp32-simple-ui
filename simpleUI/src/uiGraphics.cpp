@@ -40,74 +40,59 @@ void interactiveIcon::init(unsigned char* _bitmap, unsigned int _posX = 0, unsig
 
 //uiBox
 uiBox::uiBox(){
-    filled = false;
 }
 
-uiBox::uiBox(bool _filled){
-    filled = _filled;
+void uiBox::drawBox(frameInfo* f, uiVisualTransformation vt, Dimension d){
+    //Slog("draw box")
+
+    if(vt.invertedBackground){
+        f->display->setDrawColor(0);
+    }else{
+        f->display->setDrawColor(1);
+    }
+
+    f->display->drawBox(
+        f->viewportOffset.convertX(d.getX()),
+        f->viewportOffset.convertY(d.getY()), 
+        f->viewportOffset.convertWidth(d.getWidth()),
+        f->viewportOffset.convertHeight(d.getHeight())
+    );
 }
-uiBox::uiBox(unsigned int _borderWidth){
-    filled = false;
+
+//uiFrame
+uiFrame::uiFrame(){
+    borderWidth = 1;
+}
+
+uiFrame::uiFrame(unsigned int _borderWidth){
     borderWidth = _borderWidth;
 }
-void uiBox::setBorderWidth(unsigned int _borderWidth){
+void uiFrame::setBorderWidth(unsigned int _borderWidth){
     borderWidth = _borderWidth;
 }
-void uiBox::setFilled(bool _filled){
-    filled = _filled;
-}
 
-void uiBox::drawBox(frameInfo* f, uiVisualTransformation* vt, Dimensions* d){
-    //Slog("draw2");
-   
-   //todo
-
-    if(vt->invertedBackground && filled){
-        f->display->setDrawColor(1);
-        f->display->drawBox(
-                    f->viewportOffset.convertX(d->getX()),
-                    f->viewportOffset.convertY(d->getY()), 
-                    f->viewportOffset.convertWidth(d->getWidth()),
-                    f->viewportOffset.convertHeight(d->getHeight())
-                );
-    }
-    if(vt->invertedBackground && !filled){
-        f->display->setDrawColor(1);
-        for(byte i = 0;borderWidth-1;i++){
-            f->display->drawFrame(
-                    f->viewportOffset.convertX(d->getX()+i),
-                    f->viewportOffset.convertY(d->getY()+i), 
-                    f->viewportOffset.convertWidth(d->getWidth()-i),
-                    f->viewportOffset.convertHeight(d->getHeight()-i)
-                );
-        }
-    }
-    if(!vt->invertedBackground && filled){
+void uiFrame::drawFrame(frameInfo* f, uiVisualTransformation vt, Dimension d){
+    if(vt.invertedBackground){
         f->display->setDrawColor(0);
-        f->display->drawBox(
-                    f->viewportOffset.convertX(d->getX()),
-                    f->viewportOffset.convertY(d->getY()), 
-                    f->viewportOffset.convertWidth(d->getWidth()),
-                    f->viewportOffset.convertHeight(d->getHeight())
-                );
+    }else{
+        f->display->setDrawColor(1);
     }
-    if(!vt->invertedBackground &&!filled){
-        f->display->setDrawColor(0);
-        for(byte i = 0;borderWidth-1;i++){
-            f->display->drawFrame(
-                    f->viewportOffset.convertX(d->getX()+i),
-                    f->viewportOffset.convertY(d->getY()+i), 
-                    f->viewportOffset.convertWidth(d->getWidth()-i),
-                    f->viewportOffset.convertHeight(d->getHeight()-i)
-                );
-        }
+    
+    for(byte i = 0;i<=borderWidth-1;i++){
+        //Slog("draw frame")
+        f->display->drawFrame(
+                f->viewportOffset.convertX(d.getX()+i),
+                f->viewportOffset.convertY(d.getY()+i), 
+                f->viewportOffset.convertWidth(d.getWidth()-i),
+                f->viewportOffset.convertHeight(d.getHeight()-i)
+            );
     }
 }
 
 
 
 //uiInteractiveBox
-
+/*
 uiInteractiveBox::uiInteractiveBox() : uiElement(){
     selectionMode = SelectionMode::notSelectable;
     focusMode = FocusMode::passive;
@@ -139,14 +124,13 @@ uiInteractiveBox::~uiInteractiveBox(){
     
 }
 
-/*
 void uiBox::init(unsigned int _id, unsigned int _posX = 0, unsigned int _posY = 0, unsigned int _width = 0, unsigned int _height = 0, bool isVisible = true){
     this->setDimension(_posX, _posY, _width, _height);
     this->visible = isVisible;
     //filled = _filled;
     borderWidth = borderWidth;
 }
-*/
+
 
 void uiInteractiveBox::drawThis(frameInfo* f){
     //Slog("draw2");
@@ -190,3 +174,5 @@ void uiInteractiveBox::drawThis(frameInfo* f){
         }
     }
 }
+
+*/

@@ -36,16 +36,22 @@ class glyph : public uiElement{
 
 class uiBox{
     protected:
-        unsigned int borderWidth = 1;
-        bool filled = true;
-        void drawBox(frameInfo* f, uiVisualTransformation* vt, Dimensions* d);
+        void drawBox(frameInfo* f, uiVisualTransformation vt, Dimension d);
     public:
         uiBox();
-        uiBox(bool _filled);
-        uiBox(unsigned int _borderWidth);
-        void setBorderWidth(unsigned int _borderWidth);
-        void setFilled(bool _filled);
 };
+
+class uiFrame{
+    protected:
+        unsigned int borderWidth = 1;
+        void drawFrame(frameInfo* f, uiVisualTransformation vt, Dimension d);
+    public:
+        uiFrame();
+        uiFrame(unsigned int _borderWidth);
+        void setBorderWidth(unsigned int _borderWidth);
+};
+
+/*
 
 class uiInteractiveBox: public uiElement{
     protected:
@@ -59,3 +65,4 @@ class uiInteractiveBox: public uiElement{
         ~uiInteractiveBox();
         //virtual void init(unsigned int _id, unsigned int _posX = 0, unsigned int _posY = 0, unsigned int _width = 0, unsigned int _height = 0, bool isVisible = true);
 };
+*/

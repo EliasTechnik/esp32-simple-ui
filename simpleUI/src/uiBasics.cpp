@@ -1,6 +1,5 @@
 #include "uiBasics.h"
 
-
 //Position
 Position::Position(){
     posX=0;
@@ -29,11 +28,11 @@ void Position::setPosition(unsigned int _posX, unsigned int _posY){
 };
 
 
-void Position::setX(unsigned int _posX){
+void Position::setPosX(unsigned int _posX){
     posX=_posX;
 };
 
-void Position::setY(unsigned int _posY){
+void Position::setPosY(unsigned int _posY){
     posY=_posY;
 };
 
@@ -73,10 +72,103 @@ void Sizing::setHeight(int _height){
     height=_height;
 };
 
+//Dimension
+Dimension::Dimension():Sizing(),Position(){
 
-Viewport::Viewport(Dimensions _dimension){
+};
+
+Dimension::Dimension(Position _position, Sizing _sizing):Sizing(_sizing),Position(_position){
+
+};
+
+Dimension::Dimension(unsigned int _posX, unsigned int _posY, int _width, int _height):Sizing(_width,_height),Position(_posX,_posY){
+
+}
+
+Sizing Dimension::getSizing(){
+    return Sizing(this->width, this->height);
+};
+
+Position Dimension::getPosition(){
+    return Position(this->posX, this->posY);
+}
+
+//Viewport
+Viewport::Viewport(Dimension _dimension){
     dimension = _dimension;
 }
+
+
+//Padding
+Padding::Padding(){
+
+};
+Padding::Padding(unsigned int vertical, unsigned int horizontal){
+    top = horizontal;
+    bottom = horizontal;
+    start = vertical;
+    end = vertical;
+};
+Padding::Padding(unsigned int all){
+    top = all;
+    bottom = all;
+    start = all;
+    end = all;
+};
+Padding::Padding(unsigned int _top, unsigned int _start, unsigned int _bottom, unsigned int _end){
+    top = _top;
+    bottom = _bottom;
+    start = _start;
+    end = _end;
+};
+Dimension Padding::getOuter(Dimension d){
+    return Dimension(
+        d.getX()-start,//x
+        d.getY()-top,//y
+        d.getWidth()+start+end,//width
+        d.getHeight()+top+bottom//height
+    );
+};
+Dimension Padding::getInner(Dimension d){
+    return Dimension(
+        d.getX()+start,//x
+        d.getY()+top,//y
+        d.getWidth()-(start+end),//width
+        d.getHeight()-(top+bottom)//height
+    );
+};
+void Padding::setTop(unsigned int _v){
+    top = _v;
+};
+void Padding::setStart(unsigned int _v){
+    start = _v;
+};
+void Padding::setEnd(unsigned int _v){
+    end = _v;
+};
+void Padding::setBottom(unsigned int _v){
+    bottom = _v;
+};
+void Padding::setVertical(unsigned int _v){
+    start = _v;
+    end = _v;
+};
+void Padding::setHorizontal(unsigned int _v){
+    top = _v;
+    bottom = _v;
+};
+void Padding::setAll(unsigned int _v){
+    top = _v;
+    bottom = _v;
+    start = _v;
+    end = _v;
+}
+
+
+
+
+
+
 
 int Viewport::convertX(int _x){
     return _x + dimension.getX();
@@ -141,3 +233,14 @@ uiVisualTransformation::uiVisualTransformation(bool _invertedContent, bool _inve
     invertedBackground = _invertedBackground;
     invertedContent = _invertedContent;
 }
+
+/*
+uiVisualTransformation::uiVisualTransformation(bool _invertedContent, bool _invertedBackground, bool _showSelected){
+    invertedBackground = _invertedBackground;
+    invertedContent = _invertedContent;
+    showSelection = _showSelected;
+}
+uiVisualTransformation::uiVisualTransformation(bool _showSelected){
+    showSelection = _showSelected;
+}
+*/

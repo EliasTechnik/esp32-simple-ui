@@ -28,3 +28,4 @@ inline void slog(String file, int line, String functionname, String message, Str
 #define Slog(message) slog(__FILE__,__LINE__,__FUNCTION_NAME__,message);
 #define S_log(message, sender) slog(__FILE__,__LINE__,__FUNCTION_NAME__,message, sender);
 
+

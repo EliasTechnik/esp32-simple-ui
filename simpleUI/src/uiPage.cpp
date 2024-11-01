@@ -1,6 +1,6 @@
 #include "uiPage.h"
 
-uiPage::uiPage(): uiElement(){
+uiPage::uiPage(){
     selectionMode = SelectionMode::passthroughSelection;
     focusMode = FocusMode::passthrough;
     focus = FocusState::parent;
@@ -8,7 +8,7 @@ uiPage::uiPage(): uiElement(){
     id = "uiPage";
 };
 
-uiPage::uiPage(uiElement* _child): uiElement(){
+uiPage::uiPage(uiElement* _child){
     addChild(_child, true);
     selectionMode = SelectionMode::passthroughSelection;
     focusMode = FocusMode::passthrough;

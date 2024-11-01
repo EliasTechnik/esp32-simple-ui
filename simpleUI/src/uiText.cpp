@@ -34,20 +34,22 @@ void uiText::setText(string _text){
     text = _text;
 }
 
-void uiText::drawText(frameInfo* f, uiVisualTransformation* vt, Dimensions* d){
+void uiText::drawText(frameInfo* f, uiVisualTransformation vt, Position p){
     f->display->setFont(font);
-    int height = f->display->getMaxCharHeight();
-    if(vt->invertedContent){
-        f->display->setFontMode(1); //https://github.com/olikraus/u8g2/wiki/u8g2reference#setdrawcolor
+    int height = f->display->getAscent();
+    f->display->setFontMode(1); //https://github.com/olikraus/u8g2/wiki/u8g2reference#setdrawcolor
+    if(vt.invertedContent){
+        f->display->setDrawColor(0);
     }else{
-        f->display->setFontMode(0);
+        f->display->setDrawColor(1);
     }
-    f->display->drawStr(f->viewportOffset.convertX(d->getX()),f->viewportOffset.convertY(d->getY()+height), text.c_str());
+    f->display->setFontPosBaseline();
+    f->display->drawStr(f->viewportOffset.convertX(p.getX()),f->viewportOffset.convertY(p.getY()+height), text.c_str());
 }
 
 Sizing uiText::getTextSizing(frameInfo* f){
     f->display->setFont(font);
-    Sizing s = Sizing(f->display->getStrWidth(text.c_str()),f->display->getAscent()-f->display->getDescent());
+    Sizing s = Sizing(f->display->getStrWidth(text.c_str()),(f->display->getAscent())-(f->display->getDescent()));
     return s;
 }
 
@@ -58,7 +60,7 @@ Sizing uiText::getTextSizing(frameInfo* f){
 //staticLabel
 
 uiStaticLabel::uiStaticLabel(){
-    setDimension();
+    //setDimension();
     setVisible(true);
     selectionMode = SelectionMode::notSelectable;
     focusMode = FocusMode::passive;
@@ -70,8 +72,13 @@ uiStaticLabel::uiStaticLabel(){
 
 
 uiStaticLabel::uiStaticLabel(string _text, unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool isVisible): 
-    uiElement(_posX, _posY, _width, _height, SelectionMode::notSelectable, isVisible)
+    uiElement(SelectionMode::notSelectable, isVisible)
 {
+    posX = _posX;
+    posY = _posY;
+    width = _width;
+    height = _height;
+
     selectionMode = SelectionMode::notSelectable;
     focusMode = FocusMode::passive;
     focus = FocusState::parent;
@@ -128,6 +135,7 @@ void uiStaticLabel::drawThis(frameInfo* f){
 
 //interactiveStaticLabel
 
+/*
 InteractiveStaticLabel::InteractiveStaticLabel(){
     setDimension();
     align = UIalign::UIAleft;
@@ -139,3 +147,4 @@ InteractiveStaticLabel::InteractiveStaticLabel(string _text, unsigned int _posX,
     setDimension(_posX,_posY,_width,_height);
     setVisible(isVisible);
 };
+*/

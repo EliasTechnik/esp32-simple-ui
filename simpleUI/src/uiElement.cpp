@@ -2,7 +2,7 @@
 #include "uiPage.h"
 
 //uiBaseElement
-uiElement::uiElement() : Dimensions(){
+uiElement::uiElement(){
     visible = true;
 };
 
@@ -16,11 +16,7 @@ uiElement::~uiElement(){
     }
 };
 
-uiElement::uiElement(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, SelectionMode _selectionMode) : Dimensions(_posX, _posY, _width, _height){
-    selectionMode = _selectionMode;
-};
-
-uiElement::uiElement(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, SelectionMode _selectionMode, bool isVisible) : Dimensions(_posX, _posY, _width, _height){
+uiElement::uiElement( SelectionMode _selectionMode, bool isVisible) {
     visible = isVisible;
     selectionMode = _selectionMode;
 };
@@ -302,19 +298,46 @@ void uiElement::selectFocusReceiverMethod(uiElement* receiver){
 
 void uiElement::setChildSelection(bool ignoreFocusChild){
     //set selection
-    if(focusChild != nullptr){
-        if(focusChild->getSelectable()){
-            childs.at(selectedChildID)->setSelected(SelectionState::notSelected);
-            selectedChildID = getChildIndex(focusChild);
-            focusChild->setSelected(SelectionState::showAsSelected);
+    if(ignoreFocusChild){
+        if(selectedChildID<childs.size()){
+            if(childs.at(selectedChildID)->getSelectable()){
+                childs.at(selectedChildID)->setSelected(SelectionState::showAsSelected);
+            }else{
+                setChildSelection(false);
+            }
         }else{
-            S_log("err: focusChild is not selectable. Fallback to first selectable child",id)
+            setChildSelection(false);
+        }
+    }else{
+        if(focusChild != nullptr){
+            if(focusChild->getSelectable()){
+                childs.at(selectedChildID)->setSelected(SelectionState::notSelected);
+                selectedChildID = getChildIndex(focusChild);
+                focusChild->setSelected(SelectionState::showAsSelected);
+            }else{
+                S_log("err: focusChild is not selectable. Fallback to first selectable child",id)
+                int cid = getNextSelectableChildID();
+
+                if(cid == -1){
+                    S_log("err: No selectable child found. Bouncing to Parent",id)
+                    focus = FocusState::parent;
+                    selectFocusReceiverMethod(parent);
+                }else{
+                    //remove selection from old child
+                    childs.at(selectedChildID)->setSelected(SelectionState::notSelected);
+                    selectedChildID = cid;
+                    childs.at(selectedChildID)->setSelected(SelectionState::showAsSelected);
+                }
+            }
+            }else{
+            S_log("err: no focusChild. Fallback to first selectable child",id)
             int cid = getNextSelectableChildID();
 
             if(cid == -1){
                 S_log("err: No selectable child found. Bouncing to Parent",id)
                 focus = FocusState::parent;
                 selectFocusReceiverMethod(parent);
+                //parent->receiveFocus(this);
             }else{
                 //remove selection from old child
                 childs.at(selectedChildID)->setSelected(SelectionState::notSelected);
@@ -322,22 +345,8 @@ void uiElement::setChildSelection(bool ignoreFocusChild){
                 childs.at(selectedChildID)->setSelected(SelectionState::showAsSelected);
             }
         }
-        }else{
-        S_log("err: no focusChild. Fallback to first selectable child",id)
-        int cid = getNextSelectableChildID();
-
-        if(cid == -1){
-            S_log("err: No selectable child found. Bouncing to Parent",id)
-            focus = FocusState::parent;
-            selectFocusReceiverMethod(parent);
-            //parent->receiveFocus(this);
-        }else{
-            //remove selection from old child
-            childs.at(selectedChildID)->setSelected(SelectionState::notSelected);
-            selectedChildID = cid;
-            childs.at(selectedChildID)->setSelected(SelectionState::showAsSelected);
-        }
     }
+
 }
 
 void uiElement::receiveFocus(uiElement* sender){ //todo

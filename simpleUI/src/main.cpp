@@ -8,6 +8,7 @@
 #include "uiPage.h"
 #include "uiRoot.h"
 #include "uiPrebuilds.h"
+#include "uiButtons.h"
 
 
 //Pin Config
@@ -146,6 +147,22 @@ void IRAM_ATTR b_enter_ISR(){
   b_enter.laststate=v;
 }
 
+//uiCallbackFuctions
+
+void cbButton1(void * sender, UIEventType event_type){
+  Slog("CB_Button 1!")
+}
+void cbButton2(void * sender, UIEventType event_type){
+  Slog("CB_Button 2!")
+}
+void cbButton3(void * sender, UIEventType event_type){
+  Slog("CB_Button 3!")
+}
+
+
+
+
+
 
 //UI Globals
 
@@ -156,8 +173,6 @@ uiRoot* display;
 
 void setupUI(){
 
-  uiInteractiveBox* testBox; 
-  uiInteractiveBox* outlineBox;
   //create a new config
   DisplayConfig config;
 
@@ -188,35 +203,39 @@ void setupUI(){
     label
   );
 
-  uiInteractiveBox * box1 = new uiInteractiveBox(0,0,128,64,false,SelectionMode::notSelectable);
+/*
+  uiBasicButton * box1 = new uiBasicButton(0,0,128,64,false,SelectionMode::notSelectable);
   box1->setID("box1");
   mainPage->addChild(
     box1
   );
+  */
 
-  uiInteractiveBox * box2 = new uiInteractiveBox(10,10,80,8,false,SelectionMode::selectable);
-  box2->setID("box2");
+  uiBasicButton * bt1 = new uiBasicButton(Position(10,10),"Aoptg1()",&cbButton1);
+  bt1->setID("opt1");
   mainPage->addChild(
-    box2,true
+    bt1,true
   );
-  uiInteractiveBox * box3 = new uiInteractiveBox(10,20,80,8,false,SelectionMode::selectable);
-  box3->setID("box3");
+  uiBasicButton * bt2 = new uiBasicButton(Position(10,25),"Aopt2g.....ium()",&cbButton2);
+  bt2->setID("opt2");
   mainPage->addChild(
-    box3
+    bt2,true
   );
   
-  uiInteractiveBox * box4 = new uiInteractiveBox(10,30,80,8,false,SelectionMode::selectable);
-  box4->setID("box4");
+  uiBasicButton * bt3 = new uiBasicButton(Position(10,40),"Aopt2g()",&cbButton3);
+  bt3->setID("opt3");
   mainPage->addChild(
-    box4
+    bt3,true
   );
 
   secPage->addChild(
     new uiStaticLabel("Test",32,0,128,32)
   );
+  /*
   secPage->addChild(
-    new uiInteractiveBox(10,20,80,8,false,SelectionMode::selectable)
+    new uiBasicButton(Position(10,20), "Button")
   );
+  */
 
 
 
@@ -263,7 +282,6 @@ void setup() {
 
 void loop() {
   
-  
   if(!UA.executed){
     display->react(UA.action); //this needs to be done differently. react() should take the InputAction and return it!
     UA.executed = true;
@@ -271,6 +289,27 @@ void loop() {
   
 
   display->display();
+  
+  
+  
+  
+  
+  
+  /*
+  u8g2.setFont(u8g2_font_helvR08_tr);
+  string s = "Cage";
+  int w = u8g2.getStrWidth(s.c_str());      // returns w = 24
+  int h = u8g2.getAscent()-u8g2.getDescent();
+  int x = 5;
+  int y = 11;
+  u8g2.setFontPosBaseline();
+  u8g2.firstPage();
+  do
+  {
+    u8g2.drawStr(x, y, s.c_str());
+    u8g2.drawFrame(x-1,y-u8g2.getAscent()-1, w+2, h+2);
+  } while( u8g2.nextPage() );
+  */
 
 
 }

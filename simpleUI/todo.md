@@ -1,7 +1,9 @@
 # TODO
 
-- add more basic components (not childs from uiElement)
-- change dimensions to a better implementation
-- add more prefabs (and test them)
-- add icons
-- add callbacks
+- add more (basic) components:
+    - icon
+    - icon button
+    - nonSelectableText
+    - check Box with Label/Icon
+    - radio button
+    - Text edit with coursor

@@ -21,7 +21,7 @@ using namespace std; //to use string
 
 enum UIalign{UIAcenter,UIAleft,UIAright,UIAtop,UIAbottom};
 
-enum UIEventType{UIET_recvFocus, UIET_lostFocus, UIET_onEnter, UIET_onExit};
+enum UIEventType{UIET_recvFocus, UIET_lostFocus, UIET_onEnter, UIET_onExit,UIET_onBounce};
 
 struct tabPos{
     byte horizontalTabId=0;
@@ -47,7 +47,6 @@ class Position{
 };
 
 
-
 class Sizing{
     protected:
         int width;
@@ -63,29 +62,60 @@ class Sizing{
         void setHeight(int _height = 0);
 };
 
+class Dimension: public Position, public Sizing{
+    protected:
 
-struct Padding{
-    unsigned int top = 1;
-    unsigned int start = 1;
-    unsigned int end = 1;
-    unsigned int bottom = 1;
+    public:
+        Dimension();
+        Dimension(Position _position, Sizing _sizing);
+        Dimension(unsigned int _posX, unsigned int _posY, int _width, int _height);
+        Sizing getSizing();
+        Position getPosition();
 };
 
 
+class Padding{
+    protected:
+        unsigned int top = 1;
+        unsigned int start = 1;
+        unsigned int end = 1;
+        unsigned int bottom = 1;
+    public:
+        Padding();
+        Padding(unsigned int vertical, unsigned int horizontal);
+        Padding(unsigned int all);
+        Padding(unsigned int _top, unsigned int _start, unsigned int _bottom, unsigned int _end);
+        Dimension getOuter(Dimension d);
+        Dimension getInner(Dimension d);
+        void setTop(unsigned int _v);
+        void setStart(unsigned int _v);
+        void setEnd(unsigned int _v);
+        void setBottom(unsigned int _v);
+        void setVertical(unsigned int _v);
+        void setHorizontal(unsigned int _v);
+        void setAll(unsigned int _v);
+};
+
+#define UI_DEFAULT_PADDING_0a Padding(0)
+#define UI_DEFAULT_PADDING_1a Padding(1)
+#define UI_DEFAULT_PADDING_2a Padding(2)
+#define UI_DEFAULT_PADDING_3a Padding(3)
+#define UI_DEFAULT_PADDING_4a Padding(4)
+#define UI_DEFAULT_PADDING_5a Padding(5)
 
 
 struct Viewport{
-    Sizing sizing;
+    Dimension dimension;
     Viewport();
-    Viewport(Sizing _sizing);
+    Viewport(Dimension _dimension);
     int convertX(int _x);
     int convertY(int _y);
     int convertWidth(int _width);
     int convertHeight(int _height);
 };
 
-const Viewport DEFAULT_OFFSET = Viewport(Sizing(128,64));
-const Viewport ZERO_OFFSET_128_X_65 = Viewport(Sizing(128,65));
+const Viewport DEFAULT_OFFSET = Viewport(Dimension(0,0,128,64));
+const Viewport ZERO_OFFSET_128_X_65 = Viewport(Dimension(0,0,128,64));
 
 /*Information about the current frame. Every draw method gets this info. */
 
@@ -143,6 +173,8 @@ struct InputAction{
   bool present=false;
 };
 
+typedef void (*uiEventCallback)(void *sender, UIEventType event_type);
+
 struct uiCallback{
     void (*CB)(void * context, void *trigger, UIEventType event_type);
     void * CBcontext;
@@ -160,6 +192,13 @@ struct DisplayConfig{
 struct uiVisualTransformation{
     bool invertedContent = false;
     bool invertedBackground = false;
+    //bool showSelection = false;
     uiVisualTransformation();
     uiVisualTransformation(bool _invertedContent, bool _invertedBackground);
+    //uiVisualTransformation(bool _invertedContent, bool _invertedBackground, bool _showSelection);
+    //uiVisualTransformation(bool _showSelection);
 };
+
+//#define DEFAULT_UI_FONT u8g2_font_helvR08_tf
+//#define DEFAULT_UI_FONT u8g2_font_6x10_tf
+#define DEFAULT_UI_FONT u8g2_font_helvR08_tr
