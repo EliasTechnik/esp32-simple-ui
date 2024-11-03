@@ -51,7 +51,7 @@ Sizing uiText::getTextSizing(frameInfo* f){
     f->display->setFont(font);
     Sizing s = Sizing(f->display->getStrWidth(text.c_str()),(f->display->getAscent())-(f->display->getDescent()));
     return s;
-}
+};
 
 
 
@@ -70,13 +70,8 @@ uiPassiveLabel::uiPassiveLabel(){
 };
 
 
-uiPassiveLabel::uiPassiveLabel(string _text, Position _position, bool isVisible): 
-    uiElement(SelectionMode::notSelectable, isVisible)
-{
-    posX = _posX;
-    posY = _posY;
-    width = _width;
-    height = _height;
+uiPassiveLabel::uiPassiveLabel(string _text, Position _position, bool isVisible):{
+    position = _position;
 
     selectionMode = SelectionMode::notSelectable;
     focusMode = FocusMode::passive;
