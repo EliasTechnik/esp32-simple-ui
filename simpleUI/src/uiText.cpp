@@ -57,21 +57,20 @@ Sizing uiText::getTextSizing(frameInfo* f){
 
 
 
-//staticLabel
+//uiPassiveLabel
 
-uiStaticLabel::uiStaticLabel(){
+uiPassiveLabel::uiPassiveLabel(){
     //setDimension();
-    setVisible(true);
+    visible = true;
     selectionMode = SelectionMode::notSelectable;
     focusMode = FocusMode::passive;
     focus = FocusState::parent;
-    visible = true;
-    id = "uiStaticLabel";
+    id = "uiPassiveLabel";
     align = UIalign::UIAleft;
 };
 
 
-uiStaticLabel::uiStaticLabel(string _text, unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool isVisible): 
+uiPassiveLabel::uiPassiveLabel(string _text, Position _position, bool isVisible): 
     uiElement(SelectionMode::notSelectable, isVisible)
 {
     posX = _posX;
@@ -89,23 +88,23 @@ uiStaticLabel::uiStaticLabel(string _text, unsigned int _posX, unsigned int _pos
 };
 
 
-void uiStaticLabel::setAlign(UIalign _align){
+void uiPassiveLabel::setAlign(UIalign _align){
     align = _align;
 };
 
-UIalign uiStaticLabel::getAlign(){
+UIalign uiPassiveLabel::getAlign(){
     return align;
 }
 
-void uiStaticLabel::setFont(const uint8_t* _font){
+void uiPassiveLabel::setFont(const uint8_t* _font){
     font = _font;
 }
 
-void uiStaticLabel::setText(string _text){
+void uiPassiveLabel::setText(string _text){
     text = _text;
 }
 
-void uiStaticLabel::drawThis(frameInfo* f){
+void uiPassiveLabel::drawThis(frameInfo* f){
     //Slog("draw2");
     bool showSelected = (selected == SelectionState::showAsSelected || selected == SelectionState::Selected);
 

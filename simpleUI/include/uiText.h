@@ -22,19 +22,13 @@ class uiText{
 };
 
 
-class uiStaticLabel: public uiElement, public Dimension{
+class uiPassiveLabel: public uiCollection, public uiText{
     protected:
-        string text;
-        UIalign align;
-        const uint8_t* font = DEFAULT_UI_FONT;
+        Position position;
         void drawThis(frameInfo* f) override;  
     public:
-        uiStaticLabel();
-        uiStaticLabel(string _text, unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool isVisible = true);
-        void setAlign(UIalign _align);
-        UIalign getAlign();
-        void setText(string _text);
-        void setFont(const uint8_t* _font = DEFAULT_UI_FONT);
+        uiPassiveLabel();
+        uiPassiveLabel(string _text, Position _position, bool isVisible = true);
         //TODO: setFont, setSize, setColor, setUnderline, setItallic, setBold
 };
 

@@ -197,7 +197,7 @@ void setupUI(){
   //outlineBox = new uiBox(0,0,0,128,64, false);
 
   //add some ui elements to the Page
-  uiStaticLabel * label = new uiStaticLabel("Input Mode",32,0,128,32);
+  uiPassiveLabel * label = new uiPassiveLabel("Input Mode",32,0,128,32);
   label->setID("label");
   mainPage->addChild(
     label
@@ -229,7 +229,7 @@ void setupUI(){
   );
 
   secPage->addChild(
-    new uiStaticLabel("Test",32,0,128,32)
+    new uiPassiveLabel("Test",32,0,128,32)
   );
   /*
   secPage->addChild(
