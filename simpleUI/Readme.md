@@ -40,6 +40,11 @@ uiRoot
 - Focus: In the ui-tree only one object can have the focus. Focus means that this element processes user inputs.
 - Selection: Multiple uiElements can be selected. A selection is usualy shown by inverting or flashing. Selections are made by the parent object and shown by the child. A child can deny or forward selections based on selectable and the focus mode.
 
+## Input Mapping
+
+The Framework is designed for four buttons: Up, Down, Enter, Return. Additionaly
+
+
 ## Basics
 
 ### UIalign

@@ -165,11 +165,7 @@ void Padding::setAll(unsigned int _v){
 }
 
 
-
-
-
-
-
+//Viewport
 int Viewport::convertX(int _x){
     return _x + dimension.getX();
 }
@@ -244,3 +240,26 @@ uiVisualTransformation::uiVisualTransformation(bool _showSelected){
     showSelection = _showSelected;
 }
 */
+
+//UserAction
+UIEventType getUIEventTypeFromUserAction(UserAction UA){
+    switch (UA){
+    case UserAction::none: 
+        return UIEventType::UIET_unknown;
+        break;
+    case UserAction::backButton:
+        return UIEventType::UIET_onExit;
+    case UserAction::leftButton:
+        return UIEventType::UIET_onLeft;
+    case UserAction::rightButton:
+        return UIEventType::UIET_onRight;
+    case UserAction::enterButton:
+        return UIEventType::UIET_onEnter;
+    case UserAction::customButton1:
+        return UIEventType::UIET_onCustom1;
+    case UserAction::customButton2:
+        return UIEventType::UIET_onCustom2;
+    default:
+        return UIEventType::UIET_unknown;
+    }
+}

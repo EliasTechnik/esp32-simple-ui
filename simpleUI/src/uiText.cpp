@@ -6,16 +6,19 @@
 uiText::uiText(){
     text = "";
     align = UIalign::UIAleft;
+    textType = genericText;
 }
 
 uiText::uiText(string _text){
     text = _text;
     align = UIalign::UIAleft;
+    textType = genericText;
 }
 
 uiText::uiText(string _text, UIalign _align){
     text = "";
     align = _align;
+    textType = genericText;
 }
 
 void uiText::setAlign(UIalign _align){
@@ -34,8 +37,13 @@ void uiText::setText(string _text){
     text = _text;
 }
 
+void uiText::setTextType(TextType _type){
+    textType = _type;
+}
+
 void uiText::drawText(frameInfo* f, uiVisualTransformation vt, Position p){
     f->display->setFont(font);
+    f->display->setFontPosBaseline();
     int height = f->display->getAscent();
     f->display->setFontMode(1); //https://github.com/olikraus/u8g2/wiki/u8g2reference#setdrawcolor
     if(vt.invertedContent){
@@ -43,14 +51,26 @@ void uiText::drawText(frameInfo* f, uiVisualTransformation vt, Position p){
     }else{
         f->display->setDrawColor(1);
     }
-    f->display->setFontPosBaseline();
+    
     f->display->drawStr(f->viewportOffset.convertX(p.getX()),f->viewportOffset.convertY(p.getY()+height), text.c_str());
 }
 
-Sizing uiText::getTextSizing(frameInfo* f){
+Sizing uiText::getTextSizing(frameInfo* f, string _text){
     f->display->setFont(font);
-    Sizing s = Sizing(f->display->getStrWidth(text.c_str()),(f->display->getAscent())-(f->display->getDescent()));
+    Sizing s;
+    f->display->setFontPosBaseline();
+    switch(textType){
+        case number:
+            s = Sizing(f->display->getStrWidth(_text.c_str()),(f->display->getAscent()));
+        break;
+        default:
+            s = Sizing(f->display->getStrWidth(_text.c_str()),(f->display->getAscent())-(f->display->getDescent()));
+    }
     return s;
+};
+
+Sizing uiText::getTextSizing(frameInfo* f){
+    return getTextSizing(f,text);
 };
 
 
@@ -70,7 +90,7 @@ uiPassiveLabel::uiPassiveLabel(){
 };
 
 
-uiPassiveLabel::uiPassiveLabel(string _text, Position _position, bool isVisible):{
+uiPassiveLabel::uiPassiveLabel(string _text, Position _position, bool isVisible){
     position = _position;
 
     selectionMode = SelectionMode::notSelectable;
@@ -83,22 +103,6 @@ uiPassiveLabel::uiPassiveLabel(string _text, Position _position, bool isVisible)
 };
 
 
-void uiPassiveLabel::setAlign(UIalign _align){
-    align = _align;
-};
-
-UIalign uiPassiveLabel::getAlign(){
-    return align;
-}
-
-void uiPassiveLabel::setFont(const uint8_t* _font){
-    font = _font;
-}
-
-void uiPassiveLabel::setText(string _text){
-    text = _text;
-}
-
 void uiPassiveLabel::drawThis(frameInfo* f){
     //Slog("draw2");
     bool showSelected = (selected == SelectionState::showAsSelected || selected == SelectionState::Selected);
@@ -106,7 +110,7 @@ void uiPassiveLabel::drawThis(frameInfo* f){
     if(visible){
         f->display->setFont(font);
         int height = f->display->getMaxCharHeight();
-        f->display->drawStr(f->viewportOffset.convertX(posX),f->viewportOffset.convertY(posY+height), text.c_str());
+        f->display->drawStr(f->viewportOffset.convertX(position.getX()),f->viewportOffset.convertY(position.getY()+height), text.c_str());
         /*
 
         if(filled){

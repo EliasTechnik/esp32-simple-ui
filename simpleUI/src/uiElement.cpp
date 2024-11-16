@@ -224,6 +224,7 @@ void uiElement::react(UserAction UA){
                                 childWithFocus->receiveFocus(this);
                             }else{
                                 Slog("err: No child selected. TODO?"); 
+                                SaveCallback(onUnassignedInput, onUnassignedInput(this, UIET_onEnter));
                             }
                         }
                     }
@@ -243,7 +244,9 @@ void uiElement::react(UserAction UA){
                             childs.at(selectedChildID)->setSelected(SelectionState::showAsSelected);
                         }
                     }else{
-                         S_log("Left pressed. TODO: Callback",id)
+                        S_log("Left pressed. Callback",id)
+                        SaveCallback(onUnassignedInput, onUnassignedInput(this, UIET_onLeft));
+                        
                     }
                     break;
                 }
@@ -262,14 +265,15 @@ void uiElement::react(UserAction UA){
                             childs.at(selectedChildID)->setSelected(SelectionState::showAsSelected);
                         }
                     }else{
-                         S_log("Right pressed. TODO: Callback",id)
+                         S_log("Right pressed. Callback",id)
+                         if(onUnassignedInput != nullptr){
+                            onUnassignedInput(this, UIET_onRight);
+                        }
                     }
                     break;
                 }
                 default:
-                    if(onInput.CB != nullptr){
-                         onInput.CB;
-                    }
+                    SaveCallback(onUnassignedInput, onUnassignedInput(this, getUIEventTypeFromUserAction(UA)));
                     break;
             }
             break;

@@ -31,7 +31,7 @@ class uiElement{
         int getPriviousSelectableChildID();
         //uiCallback onEnter;
         //uiCallback onLeave;
-        uiCallback onInput; //gets called on any input apart from enter or leave
+        uiEventCallback onUnassignedInput = nullptr; //gets called on any input apart from any input with a function assigned. (The assignement can vary on the configuration)
         virtual void drawThis(frameInfo* f); //should be overwritten by every child class which inherrits from uielement
         void drawChilds(frameInfo* f);
         int getChildIndex(uiElement* child);
@@ -55,7 +55,7 @@ class uiElement{
         void addChild(uiElement* _child, bool isFocusChild = false);
         //virtual uiElement* getChild();
         void draw(frameInfo* f); 
-        void react(UserAction UA);
+        virtual void react(UserAction UA);
         virtual void receiveFocus(uiElement* sender);
         FocusState getFocusState();
         void setID(String _id);

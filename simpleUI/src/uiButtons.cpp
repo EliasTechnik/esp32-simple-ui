@@ -14,7 +14,7 @@ uiBasicButton::uiBasicButton(Position _position, string _text, uiEventCallback _
 void uiBasicButton::receiveFocus(uiElement* sender){
     S_log("bounce focus",id)
     sender->receiveFocus(this);
-    onRcvFocus(this, UIEventType::UIET_onBounce);
+    onRcvFocus(this, UIEventType::UIET_onFocusBounce);
 }
 
 

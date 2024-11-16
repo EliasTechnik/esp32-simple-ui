@@ -1,15 +1,24 @@
 #pragma once
+
 #include "uiBasics.h"
 #include "uiElement.h"
 #include "uiText.h"
 #include "uiInteractive.h"
+#include "uiPrebuilds.h"
+
+enum TextType{
+    genericText,
+    number
+};
 
 class uiText{
     protected:
         string text;
         UIalign align;
+        TextType textType;
         const uint8_t* font = DEFAULT_UI_FONT;
         void drawText(frameInfo* f, uiVisualTransformation vt, Position p);
+        Sizing getTextSizing(frameInfo* f, string _text); 
     public:
         uiText();
         uiText(string _text);
@@ -18,6 +27,7 @@ class uiText{
         UIalign getAlign();
         void setText(string _text);
         void setFont(const uint8_t* _font = DEFAULT_UI_FONT);
+        void setTextType(TextType _type);
         Sizing getTextSizing(frameInfo* f); 
 };
 

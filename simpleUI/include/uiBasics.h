@@ -21,7 +21,22 @@ using namespace std; //to use string
 
 enum UIalign{UIAcenter,UIAleft,UIAright,UIAtop,UIAbottom};
 
-enum UIEventType{UIET_recvFocus, UIET_lostFocus, UIET_onEnter, UIET_onExit,UIET_onBounce};
+enum UIEventType{
+    UIET_unknown,   //the event is unknown
+    UIET_recvFocus, //the element has received focus
+    UIET_lostFocus, //the element has lost the focus
+    UIET_onEnter, //enter was pressed but not used for navigation
+    UIET_onExit, //exit was pressed but not used for navigation
+    UIET_onFocusBounce, //the element has received the focus but due to its configuration the focus got bounced
+    UIET_onLeft, //left was pressed but not used for naviagation
+    UIET_onRight, //right was pressed but not used for navigation
+    UIET_onCustom1, //onCustom1 was pressed
+    UIET_onCustom2  //onCustom2 was pressed
+}; 
+
+enum class UserAction{none, backButton, leftButton, rightButton, enterButton, customButton1, customButton2};
+
+UIEventType getUIEventTypeFromUserAction(UserAction UA);
 
 struct tabPos{
     byte horizontalTabId=0;
@@ -163,7 +178,7 @@ enum class SelectionState{notSelected, showAsSelected, Selected};
 
 enum class FocusDirection{fromParent,fromChild,fromUperNeighbour,fromLowerNeighbour};
 
-enum class UserAction{none, generalButton, backButton, leftButton, rightButton, enterButton};
+
 
 enum class ScreenState{off, on};
 
@@ -173,7 +188,11 @@ struct InputAction{
   bool present=false;
 };
 
+#define SaveCallback(callback,exec_cb) if(callback != nullptr){exec_cb;}
+
 typedef void (*uiEventCallback)(void *sender, UIEventType event_type);
+
+typedef void (*uiNotifyCallback)(void *sender);
 
 struct uiCallback{
     void (*CB)(void * context, void *trigger, UIEventType event_type);

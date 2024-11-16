@@ -9,6 +9,7 @@
 #include "uiRoot.h"
 #include "uiPrebuilds.h"
 #include "uiButtons.h"
+#include "uiInputs.h"
 
 
 //Pin Config
@@ -37,7 +38,7 @@ enum class ButtonStates{down,up,};
 
 struct Button{
   uint8_t pin;
-  UserAction defaultAction = UserAction::generalButton;
+  UserAction defaultAction = UserAction::none;
   unsigned long lastpress = 0;
   unsigned long lastrelease= 0;
   bool laststate = 1;
@@ -159,8 +160,14 @@ void cbButton3(void * sender, UIEventType event_type){
   Slog("CB_Button 3!")
 }
 
+void cbValueChange(void * sender){
+  Slog("the value changed to:")
+}
 
 
+
+
+int value1 = 128;
 
 
 
@@ -169,7 +176,18 @@ void cbButton3(void * sender, UIEventType event_type){
 frameInfo fi;
 uiRoot* display; 
 
+uiSelectGroup* setupEditTest(){
+  uiSelectGroup* editTest = new uiSelectGroup();
 
+  //add editable Text
+  editTest->addChild(
+    new uiIntValueInput(
+      Position(10,10),0,-10,10,&cbValueChange
+    )
+  );
+
+  return editTest;
+}
 
 void setupUI(){
 
@@ -197,7 +215,7 @@ void setupUI(){
   //outlineBox = new uiBox(0,0,0,128,64, false);
 
   //add some ui elements to the Page
-  uiPassiveLabel * label = new uiPassiveLabel("Input Mode",32,0,128,32);
+  uiPassiveLabel * label = new uiPassiveLabel("Input Mode",Position(25,0));
   label->setID("label");
   mainPage->addChild(
     label
@@ -229,7 +247,7 @@ void setupUI(){
   );
 
   secPage->addChild(
-    new uiPassiveLabel("Test",32,0,128,32)
+    new uiPassiveLabel("Test",Position(32,0))
   );
   /*
   secPage->addChild(
@@ -246,6 +264,8 @@ void setupUI(){
   uiPage* page2 = new uiPage(secPage);
   page2->setID("page2");
 
+
+  display->addPage(new uiPage(setupEditTest()));
   display->addPage(page1);
   display->addPage(page2);
 
