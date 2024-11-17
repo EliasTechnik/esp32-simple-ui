@@ -2,37 +2,13 @@
 #include "uiBasics.h"
 #include "uiElement.h"
 #include "helper.h"
-//#include "uiInteractive.h"
 
 /*
-class icon : public uiElement{
-    protected:
-        unsigned char* bitmap; 
-    public:
-        icon();
-        virtual void init(unsigned char* _bitmap, unsigned int _posX = 0, unsigned int _posY = 0, unsigned int _width = 0, unsigned int _height = 0, bool isVisible = true);
-        unsigned char* getBitmap();  
-        void draw();    
-};
 
-class interactiveIcon: public icon, public uiInteractive{
-    protected:
-        
-    public:
-        interactiveIcon();
-        virtual void init(unsigned char* _bitmap, unsigned int _posX = 0, unsigned int _posY = 0, unsigned int _width = 0, unsigned int _height = 0, bool isVisible = true);
-};
-
-class glyph : public uiElement{
-    protected:
-        uint16_t code;
-    public:
-        glyph(uint16_t uni_code, unsigned int _posX, unsigned int _posY, bool isVisible = true);
-        void setCode(uint16_t);
-        uint16_t getCode();
-};
+uiGraphics.h provides all classed to draw basic geometric shapes. They can be used when building uiElements. The uiElement has to inherit the class it wants to use
 
 */
+
 
 class uiBox{
     protected:
@@ -51,18 +27,21 @@ class uiFrame{
         void setBorderWidth(unsigned int _borderWidth);
 };
 
-/*
-
-class uiInteractiveBox: public uiElement{
+class uiCircle{
     protected:
-        byte borderWidth = 1;
-        bool filled = true;
-        void drawThis(frameInfo* f) override; 
+        unsigned int borderWidth = 1;
+        void drawCircle(frameInfo* f, uiVisualTransformation vt, Dimension d);
     public:
-        uiInteractiveBox();
-        uiInteractiveBox(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height);
-        uiInteractiveBox(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool _filled, SelectionMode SelectionMode = SelectionMode::notSelectable);
-        ~uiInteractiveBox();
-        //virtual void init(unsigned int _id, unsigned int _posX = 0, unsigned int _posY = 0, unsigned int _width = 0, unsigned int _height = 0, bool isVisible = true);
+        uiCircle();
+        uiCircle(unsigned int _borderWidth);
+        void setBorderWidth(unsigned int _borderWidth);
 };
-*/
+
+class uiFilledCircle{
+    protected:
+        void drawFilledCircle(frameInfo* f, uiVisualTransformation vt, Dimension d);
+    public:
+        uiFilledCircle();
+        uiFilledCircle();
+};
+

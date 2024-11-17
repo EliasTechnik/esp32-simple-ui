@@ -66,19 +66,44 @@ int uiIntValueInput::setValue(int _value){
 
 int uiIntValueInput::increaseBy(int a, bool allowRollover){
     if(allowRollover){
-        //TODO
+        int availRange = maxValue - value;
+        int range = maxValue - minValue;
+        if(a>availRange){
+            int add = a - availRange;
+            add = add % range;
+            value = minValue + add;
+        }else{
+            value = value + a;
+        }
+        return value;
         
     }else{
-        //TODO
+        return setValue(value+a);
     }
 }
 
 int uiIntValueInput::decreaseBy(int a, bool allowRollover){
     if(allowRollover){
-        //TODO
-        
+        int availRange = value-minValue;
+        int range = maxValue - minValue;
+        if(a>availRange){
+            int sub = a - availRange;
+            sub = sub % range;
+            value = maxValue - sub;
+        }else{
+            value = value - a;
+        }
+        return value;
     }else{
-        //TODO
+        return setValue(value-a);
+    }
+}
+
+int uiIntValueInput::changeBy(int a, bool allowRollover){
+    if(a>=0){
+        return increaseBy(a, allowRollover);
+    }else{
+        return decreaseBy(a, allowRollover);
     }
 }
 

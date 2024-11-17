@@ -185,6 +185,21 @@ uiSelectGroup* setupEditTest(){
       Position(10,10),0,-10,10,&cbValueChange
     )
   );
+  editTest->addChild(
+    new uiIntValueInput(
+      Position(10,10),0,-10,10,&cbValueChange
+    )
+  );
+  editTest->addChild(
+    new uiIntValueInput(
+      Position(10,10),0,-10,10,&cbValueChange
+    )
+  );
+  editTest->addChild(
+    new uiIntValueInput(
+      Position(10,10),0,-10,10,&cbValueChange
+    )
+  );
 
   return editTest;
 }
