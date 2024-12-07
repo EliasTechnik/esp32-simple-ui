@@ -1,55 +1,29 @@
 #pragma once
 #include "uiBasics.h"
-#include "uiInteractive.h"
+#include "uiElement.h"
+#include "uiRoot.h"
 
 
-/*A UI-Page owns a set of ui elements.
-They get drawn in the order they are added (back to front).
+/*
+A UI-Page is like a uiGroup but it covers the whole screen and only draws it child elements 
+*/
 
-On every uiPage there are four input posibilitys:
-    - enter
-    - up
-    - down
-    - return: leaves the 
-The Element-ID are given by the page*/
+class uiRoot;
 
-class uipage{
+class uiPage: public uiElement{
     protected:
-        uiElement* elist; //dynamic array of non interactive Elements 
-        uiInteractive* ilist; //dynamic array of interactive Elements
-        unsigned int pageID;
-        unsigned int ecount; 
-        unsigned int icount;
-        uipagegroup childgroup; //stores a potential childgroup behind that page (has no function but can be used to make menu building and navigation easyer)
+        uiRoot* root;
+        //void selectFocusReceiverMethod(uiElement* receiver);
     public:    
-        uipage(); //constructor
-        ~uipage(); //destructor
-        void init(unsigned int _pageID);
-        void drawPage();
-        unsigned int addUIElement(uiElement _e);
-        unsigned int addUIInteractive(uiInteractive _i);
-        uiElement getUIElement(unsigned int index);
-        uiInteractive getUIinteractive(unsigned int index);
-        void setChildgroup(uipagegroup _childgroup);
-        uipagegroup getChildgroup();
-};
-
-/*Groups UI-Pages together*/
-
-class uipagegroup{
-    protected:
-        unsigned int pagecount; //counts the number of available ui pages
-        unsigned int pagepos;
-        uipage* pagelist;
-    public:
-        uipagegroup(U8G2 display, unsigned int _pagecount);
-        ~uipagegroup();
-        unsigned int addPage(uipage page);
-        uipage getPage(unsigned int index);
-        uipage getPage(string name);
-        void displayPage(string name);
-        void displayPage(unsigned int index);
-        void updateUI(); //updates the display, should be called several times a second (30x for 30 FPS)
+        uiPage(); //constructor
+        uiPage(uiElement* _child); //constructor
+        ~uiPage(); //destructor
+        void setRoot(uiRoot* _root);
+        //void receiveFocus(uiElement* sender);
+        void receiveFocus(uiRoot* sender);
+        void receiveFocus(uiElement* sender) override;
+        uiClassHirachyType getUIClassHirachyType();
+        //void react(UserAction ua);
 };
 
 

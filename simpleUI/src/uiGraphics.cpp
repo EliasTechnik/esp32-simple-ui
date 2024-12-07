@@ -39,54 +39,140 @@ void interactiveIcon::init(unsigned char* _bitmap, unsigned int _posX = 0, unsig
 */
 
 //uiBox
-
-uiBox::uiBox() : uiElement(){
+uiBox::uiBox(){
 }
 
-uiBox::uiBox(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height)
-:uiElement(_posX,_posY,_width,_height){};
+void uiBox::drawBox(frameInfo* f, uiVisualTransformation vt, Dimension d){
+    //Slog("draw box")
 
-uiBox::uiBox(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool _filled, bool isSelectable)
-:uiElement(_posX,_posY,_width,_height,isSelectable){
-    filled = _filled;
+    if(vt.invertedBackground){
+        f->display->setDrawColor(0);
+    }else{
+        f->display->setDrawColor(1);
+    }
+
+    f->display->drawBox(
+        f->viewportOffset.convertX(d.getX()),
+        f->viewportOffset.convertY(d.getY()), 
+        f->viewportOffset.convertWidth(d.getWidth()),
+        f->viewportOffset.convertHeight(d.getHeight())
+    );
+}
+
+//uiFrame
+uiFrame::uiFrame(){
+    borderWidth = 1;
+}
+
+uiFrame::uiFrame(unsigned int _borderWidth){
+    borderWidth = _borderWidth;
+}
+void uiFrame::setBorderWidth(unsigned int _borderWidth){
+    borderWidth = _borderWidth;
+}
+
+void uiFrame::drawFrame(frameInfo* f, uiVisualTransformation vt, Dimension d){
+    if(vt.invertedBackground){
+        f->display->setDrawColor(0);
+    }else{
+        f->display->setDrawColor(1);
+    }
+    
+    for(byte i = 0;i<=borderWidth-1;i++){
+        //Slog("draw frame")
+        f->display->drawFrame(
+                f->viewportOffset.convertX(d.getX()+i),
+                f->viewportOffset.convertY(d.getY()+i), 
+                f->viewportOffset.convertWidth(d.getWidth()-i),
+                f->viewportOffset.convertHeight(d.getHeight()-i)
+            );
+    }
+}
+
+
+
+//uiInteractiveBox
+/*
+uiInteractiveBox::uiInteractiveBox() : uiElement(){
+    selectionMode = SelectionMode::notSelectable;
+    focusMode = FocusMode::passive;
+    focus = FocusState::parent;
+    visible = true;
+    id = "uiBox";
+}
+
+uiInteractiveBox::uiInteractiveBox(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height)
+:uiElement(_posX,_posY,_width,_height){
+    selectionMode = SelectionMode::notSelectable;
+    focusMode = FocusMode::passive;
+    focus = FocusState::parent;
+    visible = true;
+    id = "uiBox";
 };
 
-uiBox::~uiBox(){
+uiInteractiveBox::uiInteractiveBox(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool _filled, SelectionMode _selectionMode)
+:uiElement(_posX,_posY,_width,_height, _selectionMode,true){
+    filled = _filled;
+    selectionMode = _selectionMode;
+    focusMode = FocusMode::passive;
+    focus = FocusState::parent;
+    visible = true;
+    id = "uiBox";
+};
+
+uiInteractiveBox::~uiInteractiveBox(){
     
 }
 
-/*
 void uiBox::init(unsigned int _id, unsigned int _posX = 0, unsigned int _posY = 0, unsigned int _width = 0, unsigned int _height = 0, bool isVisible = true){
     this->setDimension(_posX, _posY, _width, _height);
     this->visible = isVisible;
     //filled = _filled;
     borderWidth = borderWidth;
 }
-*/
 
-void uiBox::draw(frameInfo* f){
-    Slog("draw2");
-    if(/*visible*/true){
-        
+
+void uiInteractiveBox::drawThis(frameInfo* f){
+    //Slog("draw2");
+    bool showSelected = (selected == SelectionState::showAsSelected || selected == SelectionState::Selected);
+
+    if(visible){
         if(filled){
-            if(f->highlightSelected && selected != SelectionState::notSelected){
-                f->display->drawFrame(posX, posY, width, height);
+            if(f->highlightSelected && showSelected){
+                f->display->drawFrame(
+                    f->viewportOffset.convertX(posX),
+                    f->viewportOffset.convertY(posY), 
+                    f->viewportOffset.convertWidth(width),
+                    f->viewportOffset.convertHeight(height)
+                );
             }else{
-                f->display->drawBox(posX, posY, width, height);
+                f->display->drawBox(
+                    f->viewportOffset.convertX(posX),
+                    f->viewportOffset.convertY(posY), 
+                    f->viewportOffset.convertWidth(width),
+                    f->viewportOffset.convertHeight(height)
+                );
             }
             
         }else{
-            if(f->highlightSelected && selected != SelectionState::notSelected){
-                f->display->drawBox(posX, posY, width, height);
+            //not filled
+            if(f->highlightSelected && showSelected){
+                f->display->drawBox(
+                    f->viewportOffset.convertX(posX),
+                    f->viewportOffset.convertY(posY), 
+                    f->viewportOffset.convertWidth(width),
+                    f->viewportOffset.convertHeight(height)
+                );
             }else{
-                f->display->drawFrame(posX, posY, width, height);
+                f->display->drawFrame(
+                    f->viewportOffset.convertX(posX),
+                    f->viewportOffset.convertY(posY), 
+                    f->viewportOffset.convertWidth(width),
+                    f->viewportOffset.convertHeight(height)
+                );
             }
         }
     }
-    
-    
-    //for testing
-    
-    //f->display->drawBox(posX, posY, width, height);
-    //f->display->drawBox(50, 25, 5, 5);
 }
+
+*/

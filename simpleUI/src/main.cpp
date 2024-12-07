@@ -1,9 +1,15 @@
 #include <Arduino.h>
 #include <U8g2lib.h>
 
+#include "uiText.h"
 #include "uiInteractive.h"
 #include "uiGraphics.h"
-#include "uiGroup.h"
+#include "uiBasics.h"
+#include "uiPage.h"
+#include "uiRoot.h"
+#include "uiPrebuilds.h"
+#include "uiButtons.h"
+#include "uiInputs.h"
 
 
 //Pin Config
@@ -19,20 +25,20 @@
 #define SD_MOSI 13
 
 //Config
-unsigned long SCREEN_SLEEPTIME=5000;
+unsigned long SCREEN_SLEEPTIME=20000;
 int AUTOPRESS_SPEED=50;
 int AUTOPRESS_DELAY=500;
 int DISPLAY_FRAME_DISTANCE=66;
-unsigned int DISPLAY_BLINK_DURATION=500; //ms 
+unsigned int DISPLAY_BLINK_DURATION=150; //ms (one half of the blink cycle)
 
 
-enum class ScreenState{off, on};
+
 enum class ButtonStates{down,up,};
 
 
 struct Button{
   uint8_t pin;
-  UserAction defaultAction = UserAction::generalButton;
+  UserAction defaultAction = UserAction::none;
   unsigned long lastpress = 0;
   unsigned long lastrelease= 0;
   bool laststate = 1;
@@ -142,107 +148,150 @@ void IRAM_ATTR b_enter_ISR(){
   b_enter.laststate=v;
 }
 
-void u8g2_prepare(void) {
-  u8g2.setFont(u8g2_font_6x10_tf);
-  u8g2.setFontRefHeightExtendedText();
-  u8g2.setDrawColor(1);
-  u8g2.setFontPosCenter();
-  u8g2.setFontDirection(0);
+//uiCallbackFuctions
+
+void cbButton1(void * sender, UIEventType event_type){
+  Slog("CB_Button 1!")
 }
+void cbButton2(void * sender, UIEventType event_type){
+  Slog("CB_Button 2!")
+}
+void cbButton3(void * sender, UIEventType event_type){
+  Slog("CB_Button 3!")
+}
+
+void cbValueChange(void * sender){
+  Slog("the value changed to:")
+}
+
+
+
+
+int value1 = 128;
+
+
 
 //UI Globals
 
 frameInfo fi;
-uiBox* testBox; 
-uiBox* outlineBox;
-uiGroup* group;
+uiRoot* display; 
 
+uiSelectGroup* setupEditTest(){
+  uiSelectGroup* editTest = new uiSelectGroup();
+
+  //add editable Text
+  editTest->addChild(
+    new uiIntValueInput(
+      Position(10,10),0,-10,10,&cbValueChange
+    )
+  );
+  editTest->addChild(
+    new uiIntValueInput(
+      Position(10,10),0,-10,10,&cbValueChange
+    )
+  );
+  editTest->addChild(
+    new uiIntValueInput(
+      Position(10,10),0,-10,10,&cbValueChange
+    )
+  );
+  editTest->addChild(
+    new uiIntValueInput(
+      Position(10,10),0,-10,10,&cbValueChange
+    )
+  );
+
+  return editTest;
+}
 
 void setupUI(){
 
-  fi.display = &u8g2;
+  //create a new config
+  DisplayConfig config;
 
-  group = new uiGroup(3);
+  //set the output device
+  config.display = &u8g2;
+  //change the viewport offset
+  config.viewportOffset = DEFAULT_OFFSET;
+
+  //create a new ui root object. This is the start of the UI Tree
+  display = new uiRoot(config);
+
+  //create a new page
+  //page1 = new uiPage();
+  //page2 = new uiPage();
+
+  uiSelectGroup* mainPage = new uiSelectGroup();
+  mainPage->setID("mainPage");
+  uiSelectGroup* secPage = new uiSelectGroup();
+  secPage->setID("secPage");
+
   //testBox = new uiBox(0,5,5,118,54);
   //outlineBox = new uiBox(0,0,0,128,64, false);
 
-  group->addElement(
-    new uiBox(10,10,20,8,false,true)
+  //add some ui elements to the Page
+  uiPassiveLabel * label = new uiPassiveLabel("Input Mode",Position(25,0));
+  label->setID("label");
+  mainPage->addChild(
+    label
   );
-  group->addElement(
-    new uiBox(10,20,20,8,false,true)
+
+/*
+  uiBasicButton * box1 = new uiBasicButton(0,0,128,64,false,SelectionMode::notSelectable);
+  box1->setID("box1");
+  mainPage->addChild(
+    box1
   );
-  group->addElement(
-    new uiBox(10,30,20,8,false,true)
+  */
+
+  uiBasicButton * bt1 = new uiBasicButton(Position(10,10),"Aoptg1()",&cbButton1);
+  bt1->setID("opt1");
+  mainPage->addChild(
+    bt1,true
   );
-}
-
-
-void displayUI(){
-  u8g2.clearBuffer();
-
-  if(millis()-last_display_flash < DISPLAY_BLINK_DURATION*2){
-    last_display_flash = millis();
-    fi.highlightSelected = !fi.highlightSelected;
-  }  
+  uiBasicButton * bt2 = new uiBasicButton(Position(10,25),"Aopt2g.....ium()",&cbButton2);
+  bt2->setID("opt2");
+  mainPage->addChild(
+    bt2,true
+  );
   
-  //draw functions
-  //testBox->draw(&fi);
-  //outlineBox->draw(&fi);
-  //Serial.println("drawn");
-  group->draw(&fi);
+  uiBasicButton * bt3 = new uiBasicButton(Position(10,40),"Aopt2g()",&cbButton3);
+  bt3->setID("opt3");
+  mainPage->addChild(
+    bt3,true
+  );
 
-  //u8g2.setBitmapMode(1); //for transparancy
-  
+  secPage->addChild(
+    new uiPassiveLabel("Test",Position(32,0))
+  );
+  /*
+  secPage->addChild(
+    new uiBasicButton(Position(10,20), "Button")
+  );
+  */
+
+
+
+  Slog("Setup6");
+
+  uiPage* page1 = new uiPage(mainPage);
+  page1->setID("page1");
+  uiPage* page2 = new uiPage(secPage);
+  page2->setID("page2");
+
+
+  display->addPage(new uiPage(setupEditTest()));
+  display->addPage(page1);
+  display->addPage(page2);
+
+  Slog(page1->getConfig());
+  Slog(page2->getConfig());
+  Slog(mainPage->getConfig());
+  Slog(secPage->getConfig());
+
+  Slog("Setup end");
 }
 
-void FlushDisplay(){
-  if(next_display_frame<millis()){
-    next_display_frame=millis()+DISPLAY_FRAME_DISTANCE;
-    if(GLOBAL_SCREEN_STATE==ScreenState::on){
-      u8g2.sendBuffer();
-    }
-  }
-}
-
-void screenSwitch(ScreenState state){
-  //switches Screem on or off
-  if(state == ScreenState::off){
-    //switch off
-    if(GLOBAL_SCREEN_STATE==ScreenState::on){
-      u8g2.clearBuffer();
-      u8g2.sendBuffer();
-      GLOBAL_SCREEN_STATE=ScreenState::off;
-    }
-  }
-  else{
-    //switch on
-    if(GLOBAL_SCREEN_STATE==ScreenState::off){
-      GLOBAL_SCREEN_STATE=ScreenState::on;
-      FlushDisplay();
-    }
-  }
-}
-
-void energyManager(InputAction ia){
-  //keeps track of time and manages ScreenTime
-  if(ia.executed && !ia.present){
-    ia.action=UserAction::none;
-  }
-  if(ia.action==UserAction::none){
-    //check display time
-    if(screen_on_timer<=millis()){
-      //turn off
-      screenSwitch(ScreenState::off);
-      Serial.println("Screen off.");
-    }
-  }
-  else{
-    //reset display time
-    screenSwitch(ScreenState::on);
-    screen_on_timer=millis()+SCREEN_SLEEPTIME;
-  }
-}
 
 void setup() {
   b_back.pin=BACK_BUTTON;
@@ -261,42 +310,42 @@ void setup() {
   Serial.begin(115200);
 
   u8g2.begin();
-  u8g2_prepare();
-  //energyManager(UA); //kinda useless
 
   setupUI();
-  //GLOBAL_SCREEN_STATE = ScreenState::on;
+
 }
 
 void loop() {
-  //helloWorld();
-
   
-  //u8g2.clearBuffer();
-  displayUI();
-  //u8g2.drawXBM(0,0,128,64,_bits); 
-  //counter=IncValue(counter,1,UserAction::rightButton);
-  //counter=IncValue(counter,-1,UserAction::leftButton);
-  //itoa(counter,screenBuffer,10);
-  //u8g2.drawStr(0,24,screenBuffer);
-
+  if(!UA.executed){
+    display->react(UA.action); //this needs to be done differently. react() should take the InputAction and return it!
+    UA.executed = true;
+  }
   
-  //final
-  energyManager(UA);
 
-  UA.executed = true;
-
-  //for testing
-  //GLOBAL_SCREEN_STATE=ScreenState::on;
-
+  display->display();
   
   
-  //draw functions
-  //testBox->draw(&fi);
-  //u8g2.drawBox(10,10,5,5);  
-  //u8g2.sendBuffer();
+  
+  
+  
+  
+  /*
+  u8g2.setFont(u8g2_font_helvR08_tr);
+  string s = "Cage";
+  int w = u8g2.getStrWidth(s.c_str());      // returns w = 24
+  int h = u8g2.getAscent()-u8g2.getDescent();
+  int x = 5;
+  int y = 11;
+  u8g2.setFontPosBaseline();
+  u8g2.firstPage();
+  do
+  {
+    u8g2.drawStr(x, y, s.c_str());
+    u8g2.drawFrame(x-1,y-u8g2.getAscent()-1, w+2, h+2);
+  } while( u8g2.nextPage() );
+  */
 
-  FlushDisplay();
 
 }
 
