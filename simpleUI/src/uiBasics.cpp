@@ -36,6 +36,33 @@ void Position::setPosY(unsigned int _posY){
     posY=_posY;
 };
 
+//FixedSizing
+
+
+FixedSizing::FixedSizing(){
+    width=0;
+    height=0;
+};
+
+FixedSizing::FixedSizing(int _width, int _height){
+    width=_width;
+    height=_height;
+};
+
+FixedSizing::~FixedSizing(){
+
+};
+
+
+int FixedSizing::getWidth(){
+    return width;
+};
+
+int FixedSizing::getHeight(){
+    return height;
+};
+
+
 //Sizing
 Sizing::Sizing(){
     width=0;
@@ -50,13 +77,6 @@ Sizing::~Sizing(){
 
 };
 
-int Sizing::getWidth(){
-    return width;
-};
-
-int Sizing::getHeight(){
-    return height;
-};
 
 void Sizing::setSizing(int _width, int _height){
     width=_width;

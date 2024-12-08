@@ -12,7 +12,8 @@ class uiSelectGroup: public uiElement{
 };
 
 /*
-Collection which can be selected but all childs cant receive focus. This Prebuild is usefull when building uiComponents without group selection logic.
+Collection which can be selected but all childs cant receive focus. 
+This Prebuild is usefull when building uiComponents without group selection logic.
 */
 class uiSelectableCollection: public uiElement{
     public:
@@ -20,7 +21,8 @@ class uiSelectableCollection: public uiElement{
 };
 
 /*
-Collection in which can not be selected. This can be used to group static elements.
+Collection in which can not be selected. 
+This can be used to group static elements.
 */
 class uiCollection: public uiElement{
     public:

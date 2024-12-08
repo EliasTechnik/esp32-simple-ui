@@ -5,7 +5,9 @@
 
 /*
 
-uiGraphics.h provides all classed to draw basic geometric shapes. They can be used when building uiElements. The uiElement has to inherit the class it wants to use
+uiGraphics.h provides all classes to draw basic geometric shapes. 
+They can be used when building uiElements. 
+The uiElement has to inherit the class it wants to use
 
 */
 
@@ -41,7 +43,6 @@ class uiFilledCircle{
     protected:
         void drawFilledCircle(frameInfo* f, uiVisualTransformation vt, Dimension d);
     public:
-        uiFilledCircle();
         uiFilledCircle();
 };
 

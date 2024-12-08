@@ -1,15 +1,23 @@
 #include <Arduino.h>
 #include <U8g2lib.h>
 
-#include "uiText.h"
-#include "uiInteractive.h"
-#include "uiGraphics.h"
-#include "uiBasics.h"
-#include "uiPage.h"
-#include "uiRoot.h"
-#include "uiPrebuilds.h"
-#include "uiButtons.h"
-#include "uiInputs.h"
+#include "uiText.h" //All for Text
+#include "uiInteractive.h" //legacy interactions handler (remove later)
+#include "uiGraphics.h" //geometric drawing functions
+#include "uiBasics.h" //basic classes to make everything work
+#include "uiPage.h" //pagination
+#include "uiRoot.h" //entry and also pagination
+#include "uiPrebuilds.h" //preconfigureds uiElements to build upon
+#include "uiButtons.h" //buttons :)
+#include "uiInputs.h" //uiElements to handle specific user Inputs
+#include "uiImage.h" //all about images (bitmap and xbm)
+
+//icons
+/*
+To save on memory the bitmaps must be manualy included.
+*/
+#include "icons/8x8/flash.xbm"
+#include "icons/8x8/network.xbm"
 
 
 //Pin Config
@@ -187,20 +195,33 @@ uiSelectGroup* setupEditTest(){
   );
   editTest->addChild(
     new uiIntValueInput(
-      Position(10,10),0,-10,10,&cbValueChange
+      Position(20,10),0,-10,10,&cbValueChange
     )
   );
   editTest->addChild(
     new uiIntValueInput(
-      Position(10,10),0,-10,10,&cbValueChange
+      Position(30,10),0,-10,10,&cbValueChange
     )
   );
   editTest->addChild(
     new uiIntValueInput(
-      Position(10,10),0,-10,10,&cbValueChange
+      Position(40,10),0,-10,10,&cbValueChange
     )
   );
 
+/*
+  editTest->addChild(
+    new uiXBMContainer(
+      10,20,8,8,network_xbm
+    )
+  );
+
+  editTest->addChild(
+    new uiXBMContainer(
+      10,30,8,8,flash_xbm
+    )
+  );
+*/
   return editTest;
 }
 

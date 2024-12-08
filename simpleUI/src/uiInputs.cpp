@@ -194,7 +194,7 @@ void uiIntValueInput::react(UserAction UA){
                             Slog("err: element is orphan! (has no parent)");
                         }
                     break;
-                case UserAction::leftButton:{
+                case UserAction::rightButton:{
                     //increase
                     if(value<maxValue){
                         value++;
@@ -205,7 +205,7 @@ void uiIntValueInput::react(UserAction UA){
                     SaveCallback(onChange,onChange(this));
                     break;
                 }
-                case UserAction::rightButton:{
+                case UserAction::leftButton:{
                     //decrese
                     if(value>minValue){
                         value--;

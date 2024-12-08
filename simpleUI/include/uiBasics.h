@@ -61,8 +61,20 @@ class Position{
         void setPosY(unsigned int _posY = 0);
 };
 
+class FixedSizing{
+    protected:
+        int width;
+        int height;
+    public:
+        FixedSizing();
+        ~FixedSizing();
+        FixedSizing(int _width, int _height);
+        int getWidth();
+        int getHeight();
+};
 
-class Sizing{
+
+class Sizing: public FixedSizing{
     protected:
         int width;
         int height;
@@ -70,8 +82,6 @@ class Sizing{
         Sizing();
         ~Sizing();
         Sizing(int _width, int _height);
-        int getWidth();
-        int getHeight();
         void setSizing(int _width = 0, int _height = 0);
         void setWidth(int _width = 0);
         void setHeight(int _height = 0);
