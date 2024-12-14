@@ -32,17 +32,21 @@ void uiRoot::addPage(uiPage* page){
 }
 
 void uiRoot::display(){ 
-    energyManager(); //takes care of about the sleep
-
-    //Slog("display");
+    energyManager(); //takes care of the sleep
 
     frameInfo fi;
     fi = lastFrameInfo;
     
+    //clear the frame buffer to prepare for redrawing
     fi.display->clearBuffer();
 
-    FlushDisplay(&fi);
-    //Slog("display end");
+    /*
+    Put debug code here:
+    */
+    //lastFrameInfo.display->drawFrame(10,10,20,20);
+
+    //enters the full ui drawing cycle
+    FlushDisplay(&fi); 
 }
 
 bool uiRoot::goToPage(uiPage* page){
@@ -136,7 +140,7 @@ void uiRoot::FlushDisplay(frameInfo* fi){
         lastFrameInfo = *fi;
 
         drawUI(fi);
-      config.display->sendBuffer();
+        config.display->sendBuffer();
     }
   }
 }

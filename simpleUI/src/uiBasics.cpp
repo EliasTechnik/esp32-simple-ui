@@ -109,9 +109,39 @@ Sizing Dimension::getSizing(){
     return Sizing(this->width, this->height);
 };
 
-Position Dimension::getPosition(){
-    return Position(this->posX, this->posY);
+Position Dimension::getPosition(UICorner corner){
+    switch(corner){
+        case UICorner_BL:
+            return Position(this->posX, this->posY+height);
+            break;
+        case UICorner_UR:
+            return Position(this->posX+width, this->posY);
+        break;
+        case UICorner_BR:
+            return Position(this->posX+width, this->posY+height);
+        break;
+        default:
+            return Position(this->posX, this->posY);
+    }
+    
 }
+
+Position Dimension::getCenter(){
+    return Position(this->posX+(width/2),this->posY+(height/2));
+}
+
+unsigned int Dimension::getShortestToCenter(){
+    if(height>=width){
+        return width/2;
+    }else{
+        return height/2;
+    }
+}
+
+
+
+
+
 
 //Viewport
 Viewport::Viewport(Dimension _dimension){

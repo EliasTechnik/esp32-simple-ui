@@ -34,6 +34,13 @@ enum UIEventType{
     UIET_onCustom2  //onCustom2 was pressed
 }; 
 
+enum UICorner{
+    UICorner_UL,
+    UICorner_BL,
+    UICorner_UR,
+    UICorner_BR
+};
+
 enum class UserAction{none, backButton, leftButton, rightButton, enterButton, customButton1, customButton2};
 
 UIEventType getUIEventTypeFromUserAction(UserAction UA);
@@ -76,8 +83,7 @@ class FixedSizing{
 
 class Sizing: public FixedSizing{
     protected:
-        int width;
-        int height;
+
     public:
         Sizing();
         ~Sizing();
@@ -95,7 +101,9 @@ class Dimension: public Position, public Sizing{
         Dimension(Position _position, Sizing _sizing);
         Dimension(unsigned int _posX, unsigned int _posY, int _width, int _height);
         Sizing getSizing();
-        Position getPosition();
+        Position getPosition(UICorner corner = UICorner_UL);
+        Position getCenter();
+        unsigned int getShortestToCenter();
 };
 
 

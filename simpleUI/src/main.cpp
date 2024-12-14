@@ -190,26 +190,26 @@ uiSelectGroup* setupEditTest(){
   //add editable Text
   editTest->addChild(
     new uiIntValueInput(
-      Position(10,10),0,-10,10,&cbValueChange
+      Position(10,10),0,0,255,&cbValueChange
     )
   );
   editTest->addChild(
     new uiIntValueInput(
-      Position(20,10),0,-10,10,&cbValueChange
+      Position(30,10),0,0,255,&cbValueChange
     )
   );
   editTest->addChild(
     new uiIntValueInput(
-      Position(30,10),0,-10,10,&cbValueChange
+      Position(50,10),0,0,255,&cbValueChange
     )
   );
   editTest->addChild(
     new uiIntValueInput(
-      Position(40,10),0,-10,10,&cbValueChange
+      Position(70,10),0,0,255,&cbValueChange
     )
   );
 
-/*
+
   editTest->addChild(
     new uiXBMContainer(
       10,20,8,8,network_xbm
@@ -221,7 +221,7 @@ uiSelectGroup* setupEditTest(){
       10,30,8,8,flash_xbm
     )
   );
-*/
+
   return editTest;
 }
 

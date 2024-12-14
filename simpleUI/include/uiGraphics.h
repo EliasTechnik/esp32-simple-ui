@@ -11,15 +11,50 @@ The uiElement has to inherit the class it wants to use
 
 */
 
+/*
 
-class uiBox{
+TODO Canvas!
+
+*/
+
+//mother object 
+class uiGraphic{
+    protected:
+
+    public:
+        uiGraphic();
+        virtual void drawUIGraphic(frameInfo* f, uiVisualTransformation vt, Dimension d); 
+};
+
+class uiGraphicElement{
+    protected:
+        Dimension gInfo;
+        uiGraphic* gElement;
+    public:
+        uiGraphicElement();
+        uiGraphicElement(uiGraphic* element, Dimension d);
+        void draw(frameInfo* f, uiVisualTransformation vt);
+        //todo set and change gInfo
+};
+
+class uiGraphicCanvas{
+    protected:
+        std::vector<uiGraphicElement*> elements;
+    public:
+        uiGraphicCanvas();
+        void addElement(uiGraphicElement*)
+}
+
+
+class uiBox: public uiGraphic{
     protected:
         void drawBox(frameInfo* f, uiVisualTransformation vt, Dimension d);
     public:
         uiBox();
+        void drawUIGraphic(frameInfo* f, uiVisualTransformation vt, Dimension d) override;
 };
 
-class uiFrame{
+class uiFrame: public uiGraphic{
     protected:
         unsigned int borderWidth = 1;
         void drawFrame(frameInfo* f, uiVisualTransformation vt, Dimension d);
@@ -27,22 +62,36 @@ class uiFrame{
         uiFrame();
         uiFrame(unsigned int _borderWidth);
         void setBorderWidth(unsigned int _borderWidth);
+        void drawUIGraphic(frameInfo* f, uiVisualTransformation vt, Dimension d) override;
 };
 
-class uiCircle{
+class uiCircle: public uiGraphic{
     protected:
         unsigned int borderWidth = 1;
-        void drawCircle(frameInfo* f, uiVisualTransformation vt, Dimension d);
+        void drawCircle(frameInfo* f, uiVisualTransformation vt, Position center, unsigned int r);
     public:
         uiCircle();
         uiCircle(unsigned int _borderWidth);
         void setBorderWidth(unsigned int _borderWidth);
+        void drawUIGraphic(frameInfo* f, uiVisualTransformation vt, Dimension d) override;
 };
 
-class uiFilledCircle{
+class uiFilledCircle: public uiGraphic{
     protected:
-        void drawFilledCircle(frameInfo* f, uiVisualTransformation vt, Dimension d);
+        void drawFilledCircle(frameInfo* f, uiVisualTransformation vt, Position center, unsigned int r);
     public:
         uiFilledCircle();
+        void drawUIGraphic(frameInfo* f, uiVisualTransformation vt, Dimension d) override;
+};
+
+class uiLine: public uiGraphic{
+    protected:
+        unsigned int borderWidth = 1;
+        void drawLine(frameInfo* f, uiVisualTransformation vt, Position pos1, Position pos2);
+    public:
+        uiLine();
+        uiLine(unsigned int _borderWidth);
+        void setBorderWidth(unsigned int _borderWidth);
+        void drawUIGraphic(frameInfo* f, uiVisualTransformation vt, Dimension d) override;
 };
 
