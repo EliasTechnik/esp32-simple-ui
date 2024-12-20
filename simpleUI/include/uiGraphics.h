@@ -6,15 +6,16 @@
 /*
 
 uiGraphics.h provides all classes to draw basic geometric shapes. 
-They can be used when building uiElements. 
+They can be used when building uiElements or as drawing functions for uiGraphicCanvas  
 The uiElement has to inherit the class it wants to use
 
 */
 
 /*
-
-TODO Canvas!
-
+uiGraphicCanvas is a special uiElemennt which can be used 
+to draw shapes on screen at runtime without defining a childclass of uiElement.
+It does this by using a list of uiGraphicElements. uiGraphicElement is a dynamic wrapper
+which stores Dimensional information about its element and is used to interface with objects inherited from uiGraphic.
 */
 
 //mother object 
@@ -23,27 +24,40 @@ class uiGraphic{
 
     public:
         uiGraphic();
-        virtual void drawUIGraphic(frameInfo* f, uiVisualTransformation vt, Dimension d); 
+        virtual void drawUIGraphic(frameInfo* f, uiVisualTransformation vt, Dimension d);
+        
 };
 
+//wrapper object 
 class uiGraphicElement{
     protected:
         Dimension gInfo;
         uiGraphic* gElement;
+        bool color;
+        bool visible;
     public:
         uiGraphicElement();
-        uiGraphicElement(uiGraphic* element, Dimension d);
+        uiGraphicElement(uiGraphic* graphic, Dimension d);
+        uiGraphicElement(uiGraphic* graphic, Dimension d, bool _color, bool _visible);
         void draw(frameInfo* f, uiVisualTransformation vt);
-        //todo set and change gInfo
+        void setDimension(Dimension d);
+        void setGraphic(uiGraphic* e);
+        void setColor(bool _color);
+        void setVisible(bool _visible);
+        //todo get functions
 };
 
-class uiGraphicCanvas{
+//a canvas to display various graphic elements. It can be integrated into the ui-tree.
+//The default constructor reasembles the behavior of uiCollection. This however can be changed.
+class uiGraphicCanvas: public uiElement{
     protected:
-        std::vector<uiGraphicElement*> elements;
+        std::vector<uiGraphicElement*> graphics;
+        void drawThis(frameInfo* f) override;
     public:
         uiGraphicCanvas();
-        void addElement(uiGraphicElement*)
-}
+        uiGraphicCanvas(bool _visible, String _id, SelectionMode _selectionMode, FocusMode _focusMode);
+        void addGraphic(uiGraphicElement* graphic);
+};
 
 
 class uiBox: public uiGraphic{

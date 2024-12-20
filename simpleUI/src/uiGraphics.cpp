@@ -1,42 +1,106 @@
 
 #include "uiGraphics.h"
-/*
-//icon
-icon::icon(){
-    setDimension(0,0,0,0);
-    setVisible(false); 
-    bitmap = nullptr;
+
+//uiGraphic
+
+uiGraphic::uiGraphic(){
+
 };
 
-void icon::init(unsigned char* _bitmap, unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool isVisible){
-    setDimension(_posX,_posY,_width,_height);
-    setVisible(isVisible);
-    bitmap = _bitmap;
+
+
+
+//uiGraphicElement
+uiGraphicElement::uiGraphicElement(){
+    gInfo.setSizing(0,0);
+    gInfo.setPosition(0,0);
+    color = true;
+    visible = true;
+    gElement = nullptr;
 };
 
-unsigned char* icon::getBitmap(){
-    return bitmap;
+uiGraphicElement::uiGraphicElement(uiGraphic* element, Dimension d){
+    gInfo = d;
+    gElement = element;
+    color = true;
+    visible = true;
+}
+
+uiGraphicElement::uiGraphicElement(uiGraphic* element, Dimension d, bool _color, bool _visible){
+    gInfo = d;
+    gElement = element;
+    color = _color;
+    visible = _visible;
 };
 
-void icon::draw(){
-    if(visible){
-        display.drawXBM(posX,posY,width,height,bitmap);
+void uiGraphicElement::draw(frameInfo* f, uiVisualTransformation vt){
+    if(gElement != nullptr && visible){
+        if(!color){
+            vt.invertedBackground = !vt.invertedBackground;
+            vt.invertedContent = !vt.invertedContent;
+        }
+        gElement->drawUIGraphic(f,vt,gInfo);
     }
 };
 
-//interactiveIcon
-
-interactiveIcon::interactiveIcon(){
-    icon();
+void uiGraphicElement::setDimension(Dimension d){
+    gInfo = d;
 };
 
-void interactiveIcon::init(unsigned char* _bitmap, unsigned int _posX = 0, unsigned int _posY = 0, unsigned int _width = 0, unsigned int _height = 0, bool isVisible = true){
-    bitmap = _bitmap;
-    setDimension(_posX,_posY,_width,_height);
-    setVisible(isVisible);
+void uiGraphicElement::setGraphic(uiGraphic* e){
+    gElement = e;
 };
 
-*/
+void uiGraphicElement::setColor(bool _color){
+    color = _color;
+};
+
+void uiGraphicElement::setVisible(bool _visible){
+    visible = _visible;
+};
+
+//uiGraphicCanvas
+uiGraphicCanvas::uiGraphicCanvas(){
+    visible = true;
+    id = "uiGraphicCanvas";
+    selectionMode = SelectionMode::notSelectable;
+    focusMode = FocusMode::passive;
+};
+
+uiGraphicCanvas::uiGraphicCanvas(bool _visible, String _id, SelectionMode _selectionMode, FocusMode _focusMode){
+    visible = _visible;
+    id = _id;
+    selectionMode = _selectionMode;
+    focusMode = _focusMode;
+};
+
+
+void uiGraphicCanvas::addGraphic(uiGraphicElement* graphic){
+    graphics.push_back(graphic);
+};
+
+void uiGraphicCanvas::drawThis(frameInfo* f){
+    if(visible){
+        uiVisualTransformation vt;
+        if(selected == SelectionState::showAsSelected){
+            vt.invertedBackground = f->highlightSelected;
+            vt.invertedContent = f->highlightSelected;
+        }else{
+            if(selected == SelectionState::Selected){
+                vt.invertedBackground = true;
+                vt.invertedContent = true;
+            }else{
+                vt.invertedBackground = false;
+                vt.invertedContent = false;
+            }
+        }
+
+        for(int i=0; i<graphics.size();i++){
+            graphics.at(i)->draw(f,vt);
+        }
+    }  
+}
+
 
 //uiBox
 uiBox::uiBox(){
@@ -112,7 +176,6 @@ void uiCircle::setBorderWidth(unsigned int _borderWidth){
 }
 
 void uiCircle::drawCircle(frameInfo* f, uiVisualTransformation vt, Position center, unsigned int r){
-    
     if(vt.invertedBackground){
         f->display->setDrawColor(0);
     }else{
@@ -123,8 +186,8 @@ void uiCircle::drawCircle(frameInfo* f, uiVisualTransformation vt, Position cent
         //Slog("draw circle)
 
         f->display->drawCircle(
-                f->viewportOffset.convertX(center.getX()+i),
-                f->viewportOffset.convertY(center.getY()+i), 
+                f->viewportOffset.convertX(center.getX()),
+                f->viewportOffset.convertY(center.getY()), 
                 f->viewportOffset.convertWidth(r-i)
             );
     }
@@ -179,106 +242,116 @@ void uiLine::drawLine(frameInfo* f, uiVisualTransformation vt, Position pos1, Po
         f->display->setDrawColor(1); 
     }
     
-    for(byte i = 0;i<=borderWidth-1;i++){
-        //Slog("draw line)
+    int offset = borderWidth/2;
 
-        f->display->drawLine(
-                f->viewportOffset.convertX(pos1.getX()+i),
-                f->viewportOffset.convertY(pos1.getY()+i), 
-                f->viewportOffset.convertWidth(pos2.getX()-i),
-                f->viewportOffset.convertHeight(pos2.getY()-i)
-            );
-        
+    /*
+    TODO:
+    Drawing angled lines with multiple strokes (borderWidth>1) involves some trigonometry for which i didnt have the time for now. 
+    Add it later. For now only horizontal or vertical lines support line width. 
+    
+    */
+    switch(pos1.getQuadrant(pos2)){
+        case UICartesianQuadrant_onX:
+            for(byte i = 0;i<=borderWidth-1;i++){
+                f->display->drawLine(
+                        f->viewportOffset.convertX(pos1.getX()),
+                        f->viewportOffset.convertY(pos1.getY()+i-offset), 
+                        f->viewportOffset.convertWidth(pos2.getX()),
+                        f->viewportOffset.convertHeight(pos2.getY()+i-offset)
+                    );
+            }
+            break;
+        case UICartesianQuadrant_onY:
+            for(byte i = 0;i<=borderWidth-1;i++){
+                f->display->drawLine(
+                        f->viewportOffset.convertX(pos1.getX()+i-offset),
+                        f->viewportOffset.convertY(pos1.getY()), 
+                        f->viewportOffset.convertWidth(pos2.getX()+i-offset),
+                        f->viewportOffset.convertHeight(pos2.getY())
+                    );
+            }
+            break;
+        case UICartesianQuadrant_I:
+            f->display->drawLine(
+                        f->viewportOffset.convertX(pos1.getX()),
+                        f->viewportOffset.convertY(pos1.getY()), 
+                        f->viewportOffset.convertWidth(pos2.getX()),
+                        f->viewportOffset.convertHeight(pos2.getY())
+                    );
+            /*
+            for(byte i = 0;i<=borderWidth-1;i++){
+                f->display->drawLine(
+                        f->viewportOffset.convertX(pos1.getX()+i-offset),
+                        f->viewportOffset.convertY(pos1.getY()), 
+                        f->viewportOffset.convertWidth(pos2.getX()+i)-offset,
+                        f->viewportOffset.convertHeight(pos2.getY())
+                    );
+            }
+            */
+            break;
+        case UICartesianQuadrant_II:
+            f->display->drawLine(
+                        f->viewportOffset.convertX(pos1.getX()),
+                        f->viewportOffset.convertY(pos1.getY()), 
+                        f->viewportOffset.convertWidth(pos2.getX()),
+                        f->viewportOffset.convertHeight(pos2.getY())
+                    );
+            /*
+            for(byte i = 0;i<=borderWidth-1;i++){
+                f->display->drawLine(
+                        f->viewportOffset.convertX(pos1.getX()+i-offset),
+                        f->viewportOffset.convertY(pos1.getY()), 
+                        f->viewportOffset.convertWidth(pos2.getX()+i)-offset,
+                        f->viewportOffset.convertHeight(pos2.getY())
+                    );
+            }
+            */
+            break;
+        case UICartesianQuadrant_III:
+            f->display->drawLine(
+                        f->viewportOffset.convertX(pos1.getX()),
+                        f->viewportOffset.convertY(pos1.getY()), 
+                        f->viewportOffset.convertWidth(pos2.getX()),
+                        f->viewportOffset.convertHeight(pos2.getY())
+                    );
+            /*
+            for(byte i = 0;i<=borderWidth-1;i++){
+                f->display->drawLine(
+                        f->viewportOffset.convertX(pos1.getX()+i-offset),
+                        f->viewportOffset.convertY(pos1.getY()), 
+                        f->viewportOffset.convertWidth(pos2.getX()+i)-offset,
+                        f->viewportOffset.convertHeight(pos2.getY())
+                    );
+            }
+            */
+            break;
+        case UICartesianQuadrant_IV:
+            f->display->drawLine(
+                        f->viewportOffset.convertX(pos1.getX()),
+                        f->viewportOffset.convertY(pos1.getY()), 
+                        f->viewportOffset.convertWidth(pos2.getX()),
+                        f->viewportOffset.convertHeight(pos2.getY())
+                    );
+            /*
+            for(byte i = 0;i<=borderWidth-1;i++){
+                f->display->drawLine(
+                        f->viewportOffset.convertX(pos1.getX()+i-offset),
+                        f->viewportOffset.convertY(pos1.getY()), 
+                        f->viewportOffset.convertWidth(pos2.getX()+i)-offset,
+                        f->viewportOffset.convertHeight(pos2.getY())
+                    );
+            }
+            */
+            break;
+        default:
+            f->display->drawPixel(
+                        f->viewportOffset.convertX(pos1.getX()),
+                        f->viewportOffset.convertY(pos1.getY())
+                    );
+            break;
     }
 }
 
 void uiLine::drawUIGraphic(frameInfo* f, uiVisualTransformation vt, Dimension d){
     drawLine(f,vt,d.getPosition(),d.getPosition(UICorner_BR));
-}
-
-
-//uiInteractiveBox
-/*
-uiInteractiveBox::uiInteractiveBox() : uiElement(){
-    selectionMode = SelectionMode::notSelectable;
-    focusMode = FocusMode::passive;
-    focus = FocusState::parent;
-    visible = true;
-    id = "uiBox";
-}
-
-uiInteractiveBox::uiInteractiveBox(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height)
-:uiElement(_posX,_posY,_width,_height){
-    selectionMode = SelectionMode::notSelectable;
-    focusMode = FocusMode::passive;
-    focus = FocusState::parent;
-    visible = true;
-    id = "uiBox";
 };
-
-uiInteractiveBox::uiInteractiveBox(unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool _filled, SelectionMode _selectionMode)
-:uiElement(_posX,_posY,_width,_height, _selectionMode,true){
-    filled = _filled;
-    selectionMode = _selectionMode;
-    focusMode = FocusMode::passive;
-    focus = FocusState::parent;
-    visible = true;
-    id = "uiBox";
-};
-
-uiInteractiveBox::~uiInteractiveBox(){
-    
-}
-
-void uiBox::init(unsigned int _id, unsigned int _posX = 0, unsigned int _posY = 0, unsigned int _width = 0, unsigned int _height = 0, bool isVisible = true){
-    this->setDimension(_posX, _posY, _width, _height);
-    this->visible = isVisible;
-    //filled = _filled;
-    borderWidth = borderWidth;
-}
-
-
-void uiInteractiveBox::drawThis(frameInfo* f){
-    //Slog("draw2");
-    bool showSelected = (selected == SelectionState::showAsSelected || selected == SelectionState::Selected);
-
-    if(visible){
-        if(filled){
-            if(f->highlightSelected && showSelected){
-                f->display->drawFrame(
-                    f->viewportOffset.convertX(posX),
-                    f->viewportOffset.convertY(posY), 
-                    f->viewportOffset.convertWidth(width),
-                    f->viewportOffset.convertHeight(height)
-                );
-            }else{
-                f->display->drawBox(
-                    f->viewportOffset.convertX(posX),
-                    f->viewportOffset.convertY(posY), 
-                    f->viewportOffset.convertWidth(width),
-                    f->viewportOffset.convertHeight(height)
-                );
-            }
-            
-        }else{
-            //not filled
-            if(f->highlightSelected && showSelected){
-                f->display->drawBox(
-                    f->viewportOffset.convertX(posX),
-                    f->viewportOffset.convertY(posY), 
-                    f->viewportOffset.convertWidth(width),
-                    f->viewportOffset.convertHeight(height)
-                );
-            }else{
-                f->display->drawFrame(
-                    f->viewportOffset.convertX(posX),
-                    f->viewportOffset.convertY(posY), 
-                    f->viewportOffset.convertWidth(width),
-                    f->viewportOffset.convertHeight(height)
-                );
-            }
-        }
-    }
-}
-
-*/

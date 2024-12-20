@@ -36,6 +36,31 @@ void Position::setPosY(unsigned int _posY){
     posY=_posY;
 };
 
+UICartesianQuadrant Position::getQuadrant(Position secPos){
+    if(posX == secPos.getX() && posY == secPos.getY()){
+        return UICartesianQuadrant_UNDEFINED;
+    }
+    if(posX == secPos.getX()){
+        return UICartesianQuadrant_onY;
+    }
+    if(posY == secPos.getY()){
+        return UICartesianQuadrant_onX;
+    }
+    if(posX < secPos.getX() && posY < secPos.getY()){
+        return UICartesianQuadrant_I;
+    }
+    if(posX > secPos.getX() && posY < secPos.getY()){
+        return UICartesianQuadrant_II;
+    }
+    if(posX > secPos.getX() && posY > secPos.getY()){
+        return UICartesianQuadrant_III;
+    }
+    if(posX < secPos.getX() && posY > secPos.getY()){
+        return UICartesianQuadrant_IV;
+    }
+}
+
+
 //FixedSizing
 
 
@@ -94,35 +119,60 @@ void Sizing::setHeight(int _height){
 
 //Dimension
 Dimension::Dimension():Sizing(),Position(){
-
+    treatAs2PointBox = false;
 };
 
 Dimension::Dimension(Position _position, Sizing _sizing):Sizing(_sizing),Position(_position){
-
+    treatAs2PointBox = false;
 };
 
-Dimension::Dimension(unsigned int _posX, unsigned int _posY, int _width, int _height):Sizing(_width,_height),Position(_posX,_posY){
+Dimension::Dimension(Position _position1, Position _position2):Sizing(_position2.getX(), _position2.getY()),Position(_position1){
+    treatAs2PointBox = true;
+};
 
-}
+Dimension::Dimension(unsigned int _posX, unsigned int _posY, int _width, int _height, bool _treatAs2PointBox):Sizing(_width,_height),Position(_posX,_posY){
+    treatAs2PointBox = _treatAs2PointBox;
+};
 
 Sizing Dimension::getSizing(){
     return Sizing(this->width, this->height);
 };
 
+bool Dimension::isBoundingBox(){
+    return treatAs2PointBox;
+}
+
 Position Dimension::getPosition(UICorner corner){
-    switch(corner){
-        case UICorner_BL:
-            return Position(this->posX, this->posY+height);
+    if(!treatAs2PointBox){
+        switch(corner){
+            case UICorner_BL:
+                return Position(posX, posY+height);
+                break;
+            case UICorner_UR:
+                return Position(posX+width, posY);
             break;
-        case UICorner_UR:
-            return Position(this->posX+width, this->posY);
-        break;
-        case UICorner_BR:
-            return Position(this->posX+width, this->posY+height);
-        break;
-        default:
-            return Position(this->posX, this->posY);
+            case UICorner_BR:
+                return Position(posX+width, posY+height);
+            break;
+            default:
+                return Position(posX, posY);
+        }
+    }else{
+        switch(corner){
+            case UICorner_BL:
+                return Position(posX, height);
+                break;
+            case UICorner_UR:
+                return Position(width, posY);
+            break;
+            case UICorner_BR:
+                return Position(width, height);
+            break;
+            default:
+                return Position(posX, posY);
+        }
     }
+    
     
 }
 

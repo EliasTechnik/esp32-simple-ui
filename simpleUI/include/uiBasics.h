@@ -41,6 +41,16 @@ enum UICorner{
     UICorner_BR
 };
 
+enum UICartesianQuadrant{
+    UICartesianQuadrant_I,
+    UICartesianQuadrant_II,
+    UICartesianQuadrant_III,
+    UICartesianQuadrant_IV,
+    UICartesianQuadrant_onX,
+    UICartesianQuadrant_onY,
+    UICartesianQuadrant_UNDEFINED
+};
+
 enum class UserAction{none, backButton, leftButton, rightButton, enterButton, customButton1, customButton2};
 
 UIEventType getUIEventTypeFromUserAction(UserAction UA);
@@ -66,6 +76,7 @@ class Position{
         void setPosition(unsigned int _posX = 0, unsigned int _posY = 0);
         void setPosX(unsigned int _posX = 0);
         void setPosY(unsigned int _posY = 0);
+        UICartesianQuadrant getQuadrant(Position secPos); //returns 1-4 for the quadrant in which secPos sits relative to this Position. If identical UNDEFINED is returned.
 };
 
 class FixedSizing{
@@ -95,12 +106,14 @@ class Sizing: public FixedSizing{
 
 class Dimension: public Position, public Sizing{
     protected:
-
+        bool treatAs2PointBox; //if this is true the sizing values will be treated as secondary position
     public:
         Dimension();
         Dimension(Position _position, Sizing _sizing);
-        Dimension(unsigned int _posX, unsigned int _posY, int _width, int _height);
+        Dimension(Position _position1, Position _position2);
+        Dimension(unsigned int _posX, unsigned int _posY, int _width, int _height, bool _isBoundingBox = false);
         Sizing getSizing();
+        bool isBoundingBox();
         Position getPosition(UICorner corner = UICorner_UL);
         Position getCenter();
         unsigned int getShortestToCenter();

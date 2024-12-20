@@ -18,6 +18,7 @@ To save on memory the bitmaps must be manualy included.
 */
 #include "icons/8x8/flash.xbm"
 #include "icons/8x8/network.xbm"
+#include "icons/128x64/logo.xbm"
 
 
 //Pin Config
@@ -291,19 +292,65 @@ void setupUI(){
   );
   */
 
+  uiGraphicCanvas* canvas = new uiGraphicCanvas();
+
+  canvas->addGraphic(new uiGraphicElement(
+    new uiCircle(3),
+    Dimension(32,32,10,10)
+    )
+  );
+
+  canvas->addGraphic(new uiGraphicElement(
+    new uiFilledCircle(),
+    Dimension(16,16,10,10)
+    )
+  );
+
+  canvas->addGraphic(new uiGraphicElement(
+    new uiLine(1),
+    Dimension(16,48,100,48,true)
+    )
+  );
+
+  canvas->addGraphic(new uiGraphicElement(
+    new uiLine(3),
+    Dimension(4,4,124,4,true)
+    )
+  );
+
+  canvas->addGraphic(new uiGraphicElement(
+    new uiLine(1),
+    Dimension(16,50,100,64)
+    )
+  );
+
+  canvas->addGraphic(new uiGraphicElement(
+    new uiLine(4),
+    Dimension(120,4,120,60)
+    )
+  );
+
+
 
 
   Slog("Setup6");
-
+  uiPage* splashScreen = new uiPage(new uiXBMContainer(0,0,128,64,logo_XBM));
   uiPage* page1 = new uiPage(mainPage);
   page1->setID("page1");
   uiPage* page2 = new uiPage(secPage);
   page2->setID("page2");
+  uiPage* page3 = new uiPage(canvas);
+  page2->setID("page2");
 
 
+
+
+  display->addPage(splashScreen);
   display->addPage(new uiPage(setupEditTest()));
   display->addPage(page1);
   display->addPage(page2);
+  display->addPage(page3);
+
 
   Slog(page1->getConfig());
   Slog(page2->getConfig());

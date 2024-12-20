@@ -21,7 +21,7 @@ class uiSelectableCollection: public uiElement{
 };
 
 /*
-Collection in which can not be selected. 
+Collection which can not be selected. 
 This can be used to group static elements.
 */
 class uiCollection: public uiElement{
