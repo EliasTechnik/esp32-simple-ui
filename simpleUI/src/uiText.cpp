@@ -74,9 +74,6 @@ Sizing uiText::getTextSizing(frameInfo* f){
 };
 
 
-
-
-
 //uiPassiveLabel
 
 uiPassiveLabel::uiPassiveLabel(){
@@ -92,7 +89,6 @@ uiPassiveLabel::uiPassiveLabel(){
 
 uiPassiveLabel::uiPassiveLabel(string _text, Position _position, bool isVisible){
     position = _position;
-
     selectionMode = SelectionMode::notSelectable;
     focusMode = FocusMode::passive;
     focus = FocusState::parent;
@@ -108,41 +104,7 @@ void uiPassiveLabel::drawThis(frameInfo* f){
     bool showSelected = (selected == SelectionState::showAsSelected || selected == SelectionState::Selected);
 
     if(visible){
-        f->display->setFont(font);
-        int height = f->display->getMaxCharHeight();
-        f->display->drawStr(f->viewportOffset.convertX(position.getX()),f->viewportOffset.convertY(position.getY()+height), text.c_str());
-        /*
-
-        if(filled){
-            if(f->highlightSelected && showSelected){
-                f->display->drawFrame(posX, posY, width, height);
-            }else{
-                f->display->drawBox(posX, posY, width, height);
-            }
-            
-        }else{
-            if(f->highlightSelected && showSelected){
-                f->display->drawBox(posX, posY, width, height);
-            }else{
-                f->display->drawFrame(posX, posY, width, height);
-            }
-        }
-        */
+        drawText(f, uiVisualTransformation(false,false), position);
     }
 }
 
-//interactiveStaticLabel
-
-/*
-InteractiveStaticLabel::InteractiveStaticLabel(){
-    setDimension();
-    align = UIalign::UIAleft;
-    setVisible(true);
-};
-
-InteractiveStaticLabel::InteractiveStaticLabel(string _text, unsigned int _posX, unsigned int _posY, unsigned int _width, unsigned int _height, bool isVisible){
-    text = _text;
-    setDimension(_posX,_posY,_width,_height);
-    setVisible(isVisible);
-};
-*/

@@ -78,3 +78,6 @@ FocusMode can be set for each uiElement and controls how the element reacts to f
 - passthrough: The element can receive focus but will passthrough to its focus-child. If there is no child the focus will bounce and may lead to a crash.
 - passive: The element can not receive focus. If it does the focus will bounce.
 
+## Example
+
+Look at the file ```teachingExample.cpp``` it explains the basic usage of SimpleUI and showcases some of its functions. 

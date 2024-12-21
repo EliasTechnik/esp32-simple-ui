@@ -213,6 +213,8 @@ enum class FocusDirection{fromParent,fromChild,fromUperNeighbour,fromLowerNeighb
 
 enum class ScreenState{off, on};
 
+
+//remove this -->
 struct InputAction{
   UserAction action=UserAction::none;
   bool executed=false;
