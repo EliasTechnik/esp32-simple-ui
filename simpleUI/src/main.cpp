@@ -160,7 +160,7 @@ void setupUI(){
     bt3,true
   );
 
-  //if you dont need to acces the element later you can add it directly to the group
+  //if you dont need to access the element later you can add it directly to the group
   secGroup->addChild(
     new uiPassiveLabel("Test",Position(32,0))
   );
@@ -276,6 +276,15 @@ void setup() {
   LeftButton = new uiHardwareButton(LEFT_BUTTON,UserAction::leftButton);
   RightButton = new uiHardwareButton(RIGHT_BUTTON,UserAction::rightButton);
   EnterButton = new uiHardwareButton(ENTER_BUTTON,UserAction::enterButton);
+  EnterButton->configureLongpress(UserAction::backButton); //this is an example of how to configure a longpress. The first parameter is the action that is triggered on longpress.
+  RightButton->configureAutopress(5); //this is an example of how to configure an autopress. The first parameter is the speed of the autopress. (ms between a press trigger)
+  EnterButton->switchLongpress(true); //Lonpresses are considered secondary inputs and can be switched on or off. Default is off so we enable it here.
+  RightButton->switchAutopress(true); //Autopresses are considered secondary inputs and can be switched on or off. Default is off so we enable it here. 
+  /*
+  Note that autopresses and longpresses cant be enabled at the same time. Swiching ether of them on will disable the other.
+  */
+
+
   HID->addInput(BackButton);
   HID->addInput(LeftButton);
   HID->addInput(RightButton);

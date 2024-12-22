@@ -51,7 +51,25 @@ enum UICartesianQuadrant{
     UICartesianQuadrant_UNDEFINED
 };
 
-enum class UserAction{none, backButton, leftButton, rightButton, enterButton, customButton1, customButton2};
+enum class UserAction{
+    none, //none is used as default and will trigger no action. Components should not react on none. This can lead to unexpected behavior.
+    backButton,
+    leftButton, 
+    rightButton, 
+    enterButton, 
+    backSecondaryButton, 
+    leftSecondaryButton, 
+    rightSecondaryButton, 
+    enterSecondaryButton, 
+    customButton1, 
+    customButton2,
+    customButton3,
+    customButton4,
+    customSecondaryButton1,
+    customSecondaryButton2,
+    customSecondaryButton3,
+    customSecondaryButton4,
+};
 
 UIEventType getUIEventTypeFromUserAction(UserAction UA);
 
