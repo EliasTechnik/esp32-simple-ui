@@ -65,5 +65,6 @@ class uiHardwareInputDriver{
     public:
         uiHardwareInputDriver(uiRoot* _uiRoot);
         void addInput(uiHardwareButton* input);
+        void injectInput(UserAction UA); //this is used to simulate inputs and can be used when implementing on screen navigation buttons
         void run(); //this has to be called frequently in order to process inputs correctly 
 };

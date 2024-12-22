@@ -19,6 +19,7 @@
 #include "icons/8x8/flash.xbm"
 #include "icons/8x8/network.xbm"
 #include "icons/128x64/logo.xbm"
+#include "icons/10x10/leftArrow.xbm"
 
 //some pin definitions
 #define BACK_BUTTON 32 
@@ -65,6 +66,13 @@ void cbButton2(void * sender, UIEventType event_type){
 void cbButton3(void * sender, UIEventType event_type){
   Slog("CB_Button 3!")
 }
+void cbIconButton1(void * sender, UIEventType event_type){
+  Slog("CB_IconButton 1!")
+  //the HardwareInputDriver is explained later. 
+  //All you need to knwo for now is that it handles user Inputs to the UI. By injecting an input we can simulate a button press.
+  HID->injectInput(UserAction::backButton);
+  HID->injectInput(UserAction::leftButton); //for testing
+}
 
 void cbValueChange(void * sender){
   Slog("the value changed to:")
@@ -99,13 +107,13 @@ uiSelectGroup* setupEditTest(){
 
   //some icons to show off
   editTest->addChild(
-    new uiXBMContainer(
+    new uiImageContainer(
       10,20,8,8,network_xbm
     )
   );
 
   editTest->addChild(
-    new uiXBMContainer(
+    new uiImageContainer(
       10,30,8,8,flash_xbm
     )
   );
@@ -158,6 +166,12 @@ void setupUI(){
   bt3->setID("opt3");
   mainGroup->addChild(
     bt3,true
+  );
+
+  uiIconButton * bt4 = new uiIconButton(Position(110,50),new uiImage(10,10, leftArrow_xbm),&cbIconButton1);
+  bt4->setID("IconButton1");
+  mainGroup->addChild(
+    bt4,true
   );
 
   //if you dont need to access the element later you can add it directly to the group
@@ -218,7 +232,7 @@ void setupUI(){
 
   //full size images a also supported. They can be used to display bitmaps and xbm images.
   //to show this of we crate a page with a full size image.
-  uiPage* splashScreen = new uiPage(new uiXBMContainer(0,0,128,64,logo_XBM));
+  uiPage* splashScreen = new uiPage(new uiImageContainer(0,0,128,64,logo_XBM));
 
   //uiPages are the elements behind uiRoot. They can be used to create a pagination. Currently the are not stackable. 
   //This means Pagination is only available on Root level.

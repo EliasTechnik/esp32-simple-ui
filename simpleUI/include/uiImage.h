@@ -2,6 +2,7 @@
 #include "uiBasics.h"
 #include "helper.h"
 #include "uiPrebuilds.h"
+#include "uiGraphics.h"
 
 /*
 
@@ -16,20 +17,30 @@ TODO:
     - implement transparent
 */
 
-class uiXBM: public FixedSizing, public Position{
+
+
+class uiImage: public FixedSizing, public uiBox{
     protected:
         bool inverted = false;
         bool transparent = false;
         unsigned char* img = nullptr;
-        void drawXBM(frameInfo* f, uiVisualTransformation vt);
+        unsigned char* imgInverted = nullptr;
+        FixedSizing imgSizing;
+        void drawImage(frameInfo* f, uiVisualTransformation vt, Position p);
+        void invertXBM();
     public:
-        uiXBM(int _x, int _y, int _width, int _height, unsigned char* _img = nullptr, bool _inverted = false, bool _transparent = false);
+        uiImage();
+        uiImage(int _width, int _height, unsigned char* _img = nullptr, bool _inverted = false, bool _transparent = false);
+        void setImage(int _width, int _height, unsigned char* _img);
+        void setImage(uiImage* img);
+        void setInverted(bool _inverted);
+        void setTransparent(bool _transparent);
 };
 
 
-class uiXBMContainer: public uiXBM, public uiCollection{
+class uiImageContainer: public uiImage, public uiCollection, public Position{
     protected:
         void drawThis(frameInfo* f) override;
     public:
-        uiXBMContainer(int _x, int _y, int _width, int _height, unsigned char* _img = nullptr, bool _inverted = false, bool _transparent = false);
+        uiImageContainer(int _x, int _y, int _width, int _height, unsigned char* _img = nullptr, bool _inverted = false, bool _transparent = false);
 };

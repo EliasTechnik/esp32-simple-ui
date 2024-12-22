@@ -94,6 +94,7 @@ class Position{
         void setPosition(unsigned int _posX = 0, unsigned int _posY = 0);
         void setPosX(unsigned int _posX = 0);
         void setPosY(unsigned int _posY = 0);
+        Position getPosition();
         UICartesianQuadrant getQuadrant(Position secPos); //returns 1-4 for the quadrant in which secPos sits relative to this Position. If identical UNDEFINED is returned.
 };
 
@@ -107,6 +108,7 @@ class FixedSizing{
         FixedSizing(int _width, int _height);
         int getWidth();
         int getHeight();
+        FixedSizing getFixedSizing();
 };
 
 
@@ -117,9 +119,11 @@ class Sizing: public FixedSizing{
         Sizing();
         ~Sizing();
         Sizing(int _width, int _height);
+        Sizing(FixedSizing fs);
         void setSizing(int _width = 0, int _height = 0);
         void setWidth(int _width = 0);
         void setHeight(int _height = 0);
+        Sizing getSizing();
 };
 
 class Dimension: public Position, public Sizing{
@@ -128,6 +132,7 @@ class Dimension: public Position, public Sizing{
     public:
         Dimension();
         Dimension(Position _position, Sizing _sizing);
+        Dimension(Position _position1, FixedSizing _sizing);
         Dimension(Position _position1, Position _position2);
         Dimension(unsigned int _posX, unsigned int _posY, int _width, int _height, bool _isBoundingBox = false);
         Sizing getSizing();

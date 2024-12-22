@@ -60,6 +60,10 @@ UICartesianQuadrant Position::getQuadrant(Position secPos){
     }
 }
 
+Position Position::getPosition(){
+    return Position(posX,posY);
+}
+
 
 //FixedSizing
 
@@ -87,6 +91,9 @@ int FixedSizing::getHeight(){
     return height;
 };
 
+FixedSizing FixedSizing::getFixedSizing(){
+    return FixedSizing(this->width, this->height);
+};
 
 //Sizing
 Sizing::Sizing(){
@@ -98,10 +105,13 @@ Sizing::Sizing(int _width, int _height){
     this->setSizing(_width,_height);
 }
 
+Sizing::Sizing(FixedSizing fs){
+    this->setSizing(fs.getWidth(),fs.getHeight());
+}
+
 Sizing::~Sizing(){
 
 };
-
 
 void Sizing::setSizing(int _width, int _height){
     width=_width;
@@ -115,6 +125,10 @@ void Sizing::setWidth(int _width){
 
 void Sizing::setHeight(int _height){
     height=_height;
+};
+
+Sizing Sizing::getSizing(){
+    return Sizing(this->width, this->height);
 };
 
 //Dimension
@@ -132,6 +146,10 @@ Dimension::Dimension(Position _position1, Position _position2):Sizing(_position2
 
 Dimension::Dimension(unsigned int _posX, unsigned int _posY, int _width, int _height, bool _treatAs2PointBox):Sizing(_width,_height),Position(_posX,_posY){
     treatAs2PointBox = _treatAs2PointBox;
+};
+
+Dimension::Dimension(Position _position1, FixedSizing _sizing):Sizing(_sizing),Position(_position1){
+    treatAs2PointBox = false;
 };
 
 Sizing Dimension::getSizing(){

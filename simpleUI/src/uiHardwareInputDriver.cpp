@@ -180,3 +180,7 @@ void uiHardwareInputDriver::run(){
         }
     }
 }
+
+void uiHardwareInputDriver::injectInput(UserAction action){
+    root->react(action);
+}
