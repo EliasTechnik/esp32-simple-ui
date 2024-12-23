@@ -224,7 +224,7 @@ void uiElement::react(UserAction UA){
                                 childWithFocus->receiveFocus(this);
                             }else{
                                 Slog("err: No child selected. TODO?"); 
-                                SaveCallback(onUnassignedInput, onUnassignedInput(this, UIET_onEnter));
+                                SafeCallback(onUnassignedInput, onUnassignedInput(this, UIET_onEnter));
                             }
                         }
                     }
@@ -245,7 +245,7 @@ void uiElement::react(UserAction UA){
                         }
                     }else{
                         S_log("Left pressed. Callback",id)
-                        SaveCallback(onUnassignedInput, onUnassignedInput(this, UIET_onLeft));
+                        SafeCallback(onUnassignedInput, onUnassignedInput(this, UIET_onLeft));
                         
                     }
                     break;
@@ -273,7 +273,7 @@ void uiElement::react(UserAction UA){
                     break;
                 }
                 default:
-                    SaveCallback(onUnassignedInput, onUnassignedInput(this, getUIEventTypeFromUserAction(UA)));
+                    SafeCallback(onUnassignedInput, onUnassignedInput(this, getUIEventTypeFromUserAction(UA)));
                     break;
             }
             break;
@@ -333,7 +333,7 @@ void uiElement::setChildSelection(bool ignoreFocusChild){
                     childs.at(selectedChildID)->setSelected(SelectionState::showAsSelected);
                 }
             }
-            }else{
+        }else{
             S_log("err: no focusChild. Fallback to first selectable child",id)
             int cid = getNextSelectableChildID();
 
@@ -450,11 +450,17 @@ uiElement* uiElement::getParent(){
     return parent;
 };
 
+//add a child to the element. If isFocusChild is true the child will be the focusChild which means it will be always the first one to receive focus when focus comes from the parent.
+//Because focusChild should not be null we set it to the first added child which is selectable if no focusChild is set.
 void uiElement::addChild(uiElement* _child, bool isFocusChild){
     _child->setParent(this);
     childs.push_back(_child);
     if(isFocusChild){
         focusChild = _child;
+    }else{
+        if(focusChild == nullptr && _child->getSelectable()){
+            focusChild = _child;
+        }
     }
 };
 

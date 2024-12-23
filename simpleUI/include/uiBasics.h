@@ -26,13 +26,27 @@ enum UIEventType{
     UIET_recvFocus, //the element has received focus
     UIET_lostFocus, //the element has lost the focus
     UIET_onEnter, //enter was pressed but not used for navigation
-    UIET_onExit, //exit was pressed but not used for navigation
+    UIET_onBack, //back was pressed but not used for navigation
     UIET_onFocusBounce, //the element has received the focus but due to its configuration the focus got bounced
     UIET_onLeft, //left was pressed but not used for naviagation
     UIET_onRight, //right was pressed but not used for navigation
     UIET_onCustom1, //onCustom1 was pressed
-    UIET_onCustom2  //onCustom2 was pressed
+    UIET_onCustom2,  //onCustom2 was pressed
+    UIET_onCustom3, //onCustom2 was pressed
+    UIET_onCustom4,  //onCustom2 was pressed
+    UIET_onSecondaryBack, //secondary back was pressed but not used for navigation
+    UIET_onSecondaryLeft, //secondary left was pressed but not used for naviagation
+    UIET_onSecondaryRight, //secondary right was pressed but not used for navigation
+    UIET_onSecondaryEnter, //secondary enter was pressed but not used for navigation
+    UIET_onSecondaryCustom1, //secondary custom1 was pressed
+    UIET_onSecondaryCustom2, //secondary custom2 was pressed
+    UIET_onSecondaryCustom3, //secondary custom3 was pressed
+    UIET_onSecondaryCustom4, //secondary custom4 was pressed
+    UIET_onChange, //the element has changed its state
 }; 
+
+String UIEventTypeToString(UIEventType et);
+String UIEventTypeToStringExplenation(UIEventType et);
 
 enum UICorner{
     UICorner_UL,
@@ -163,6 +177,10 @@ class Padding{
         void setVertical(unsigned int _v);
         void setHorizontal(unsigned int _v);
         void setAll(unsigned int _v);
+        unsigned int getStart();
+        unsigned int getEnd();
+        unsigned int getTop();
+        unsigned int getBottom();
 };
 
 #define UI_DEFAULT_PADDING_0a Padding(0)
@@ -238,13 +256,15 @@ enum class ScreenState{off, on};
 
 
 //remove this -->
+/*
 struct InputAction{
   UserAction action=UserAction::none;
   bool executed=false;
   bool present=false;
 };
+*/
 
-#define SaveCallback(callback,exec_cb) if(callback != nullptr){exec_cb;}
+#define SafeCallback(callback,exec_cb) if(callback != nullptr){exec_cb;}
 
 typedef void (*uiEventCallback)(void *sender, UIEventType event_type);
 

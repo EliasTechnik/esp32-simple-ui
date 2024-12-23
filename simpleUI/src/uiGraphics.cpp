@@ -355,3 +355,39 @@ void uiLine::drawLine(frameInfo* f, uiVisualTransformation vt, Position pos1, Po
 void uiLine::drawUIGraphic(frameInfo* f, uiVisualTransformation vt, Dimension d){
     drawLine(f,vt,d.getPosition(),d.getPosition(UICorner_BR));
 };
+
+
+/*
+######################################################
+                    uiCheckmark
+######################################################
+*/
+
+uiCheckmark::uiCheckmark(){
+
+}
+
+void uiCheckmark::drawCheckmark(frameInfo* f, uiVisualTransformation vt, Dimension d){
+    int x = d.getX();
+    int y = d.getY();
+    int w = d.getWidth();
+    int h = d.getHeight();
+    int spacing = w/10;
+
+    Position p1 = Position(x+spacing, y+h/2);
+    Position p2 = Position(x+w/2, y+h-spacing);
+    Position p3 = Position(x+w-spacing, y+spacing);
+
+    if(vt.invertedBackground){
+        f->display->setDrawColor(0);
+    }else{
+        f->display->setDrawColor(1);
+    }
+
+    f->display->drawLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
+    f->display->drawLine(p2.getX(), p2.getY(), p3.getX(), p3.getY());
+}
+
+void uiCheckmark::drawUIGraphic(frameInfo* f, uiVisualTransformation vt, Dimension d){
+    drawCheckmark(f, vt, d);
+}

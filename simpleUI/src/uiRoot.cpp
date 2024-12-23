@@ -32,6 +32,9 @@ void uiRoot::addPage(uiPage* page){
 }
 
 void uiRoot::display(){ 
+    if(screenOnTime==0){
+        screenOnTime=millis()+ config.screenSleepTime;
+    }
     energyManager(); //takes care of the sleep
 
     frameInfo fi;
@@ -124,6 +127,8 @@ void uiRoot::init(){
     config.display->setFontPosCenter();
     config.display->setFontDirection(0);
 
+    config.display->sendBuffer();
+
     lastFrameInfo.display = config.display;
 }
 
@@ -182,8 +187,9 @@ void uiRoot::energyManager(){
   
     //check display time
     if(screenOnTime<=millis() && config.useSleep){
-    //turn off
-    screenSwitch(ScreenState::off);
+        //turn off
+        Slog("enter screen sleep")
+        screenSwitch(ScreenState::off);
     }
 }
 
@@ -201,8 +207,11 @@ void uiRoot::receiveFocus(){
    
 }
 
-/*
-uiClassHirachyType uiPage::getUIClassHirachyType(){
-    return uiClassHirachyType::root;
+void uiRoot::showStartupScreen(){
+    config.display->drawFrame(config.viewportOffset.dimension.getX(),config.viewportOffset.dimension.getY(),config.viewportOffset.dimension.getWidth(),config.viewportOffset.dimension.getHeight());
+    config.display->drawStr(23,10,"Initilizing UI");
+    config.display->drawStr(12,25,"made with SimpleUI");
+    config.display->drawStr(50,40, SIMPLEUI_VERSION_STRING);
+    config.display->drawStr(16,55,"by Elias_Technik");
+    config.display->sendBuffer();
 }
-*/

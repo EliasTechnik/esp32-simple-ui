@@ -3,6 +3,7 @@
 #include "uiPage.h"
 #include "uiElement.h"
 #include <vector>
+#include "version.h"
 
 /*
 The uiRoot is the entry point for the ui. It defines the states at startup and handles inputs
@@ -40,6 +41,7 @@ class uiRoot{
         ScreenState getScreenState();
         void wakeUpScreen();
         void receiveFocus();
+        void showStartupScreen();
         //uiClassHirachyType getUIClassHirachyType() override;
 };
 

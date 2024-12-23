@@ -109,3 +109,11 @@ class uiLine: public uiGraphic{
         void drawUIGraphic(frameInfo* f, uiVisualTransformation vt, Dimension d) override;
 };
 
+class uiCheckmark: public uiGraphic{
+    protected:
+        void drawCheckmark(frameInfo* f, uiVisualTransformation vt, Dimension d);
+        void drawUIGraphic(frameInfo* f, uiVisualTransformation vt, Dimension d) override;
+    public:
+        uiCheckmark();
+};
+

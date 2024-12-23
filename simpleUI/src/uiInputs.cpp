@@ -202,7 +202,7 @@ void uiIntValueInput::react(UserAction UA){
                         value = minValue;
                     }
                     this->setText(to_string(value));
-                    SaveCallback(onChange,onChange(this));
+                    SafeCallback(onChange,onChange(this));
                     break;
                 }
                 case UserAction::leftButton:{
@@ -213,12 +213,12 @@ void uiIntValueInput::react(UserAction UA){
                         value = maxValue;
                     }
                     this->setText(to_string(value));
-                    SaveCallback(onChange,onChange(this));
+                    SafeCallback(onChange,onChange(this));
                     break;
                 }
                 default:
                     S_log("default",id);
-                    SaveCallback(onUnassignedInput,onUnassignedInput(this,getUIEventTypeFromUserAction(UA)));
+                    SafeCallback(onUnassignedInput,onUnassignedInput(this,getUIEventTypeFromUserAction(UA)));
                     break;
             }
             break;

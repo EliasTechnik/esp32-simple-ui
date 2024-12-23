@@ -282,6 +282,22 @@ void Padding::setAll(unsigned int _v){
     end = _v;
 }
 
+unsigned int Padding::getTop(){
+    return top;
+};
+
+unsigned int Padding::getStart(){
+    return start;
+};
+
+unsigned int Padding::getEnd(){
+    return end;
+};
+
+unsigned int Padding::getBottom(){
+    return bottom;
+};
+
 
 //Viewport
 int Viewport::convertX(int _x){
@@ -348,36 +364,99 @@ uiVisualTransformation::uiVisualTransformation(bool _invertedContent, bool _inve
     invertedContent = _invertedContent;
 }
 
-/*
-uiVisualTransformation::uiVisualTransformation(bool _invertedContent, bool _invertedBackground, bool _showSelected){
-    invertedBackground = _invertedBackground;
-    invertedContent = _invertedContent;
-    showSelection = _showSelected;
-}
-uiVisualTransformation::uiVisualTransformation(bool _showSelected){
-    showSelection = _showSelected;
-}
-*/
-
 //UserAction
 UIEventType getUIEventTypeFromUserAction(UserAction UA){
     switch (UA){
-    case UserAction::none: 
-        return UIEventType::UIET_unknown;
-        break;
-    case UserAction::backButton:
-        return UIEventType::UIET_onExit;
-    case UserAction::leftButton:
-        return UIEventType::UIET_onLeft;
-    case UserAction::rightButton:
-        return UIEventType::UIET_onRight;
-    case UserAction::enterButton:
-        return UIEventType::UIET_onEnter;
-    case UserAction::customButton1:
-        return UIEventType::UIET_onCustom1;
-    case UserAction::customButton2:
-        return UIEventType::UIET_onCustom2;
-    default:
-        return UIEventType::UIET_unknown;
+        case UserAction::none: 
+            return UIEventType::UIET_unknown;
+        case UserAction::backButton:
+            return UIEventType::UIET_onBack;
+        case UserAction::leftButton:
+            return UIEventType::UIET_onLeft;
+        case UserAction::rightButton:
+            return UIEventType::UIET_onRight;
+        case UserAction::enterButton:
+            return UIEventType::UIET_onEnter;
+        case UserAction::customButton1:
+            return UIEventType::UIET_onCustom1;
+        case UserAction::customButton2:
+            return UIEventType::UIET_onCustom2;
+        case UserAction::customButton3:
+            return UIEventType::UIET_onCustom3;
+        case UserAction::customButton4:
+            return UIEventType::UIET_onCustom4;
+        case UserAction::backSecondaryButton:
+            return UIEventType::UIET_onSecondaryBack;
+        case UserAction::leftSecondaryButton:
+            return UIEventType::UIET_onSecondaryLeft;
+        case UserAction::rightSecondaryButton:
+            return UIEventType::UIET_onSecondaryRight;
+        case UserAction::enterSecondaryButton:
+            return UIEventType::UIET_onSecondaryEnter;
+        case UserAction::customSecondaryButton1:
+            return UIEventType::UIET_onSecondaryCustom1;
+        case UserAction::customSecondaryButton2:
+            return UIEventType::UIET_onSecondaryCustom2;
+        case UserAction::customSecondaryButton3:
+            return UIEventType::UIET_onSecondaryCustom3;
+        case UserAction::customSecondaryButton4:
+            return UIEventType::UIET_onSecondaryCustom4;
+        default:
+            return UIEventType::UIET_unknown;
+    }
+}
+
+//UIEventType
+String UIEventTypeToString(UIEventType et){
+    switch(et){
+        case UIEventType::UIET_unknown: return "UIET_unknown";
+        case UIEventType::UIET_recvFocus: return "UIET_recvFocus";
+        case UIEventType::UIET_lostFocus: return "UIET_lostFocus";
+        case UIEventType::UIET_onEnter: return "UIET_onEnter";
+        case UIEventType::UIET_onBack: return "UIET_onBack";
+        case UIEventType::UIET_onFocusBounce: return "UIET_onFocusBounce";
+        case UIEventType::UIET_onLeft: return "UIET_onLeft";
+        case UIEventType::UIET_onRight: return "UIET_onRight";
+        case UIEventType::UIET_onCustom1: return "UIET_onCustom1";
+        case UIEventType::UIET_onCustom2: return "UIET_onCustom2";
+        case UIEventType::UIET_onCustom3: return "UIET_onCustom3";
+        case UIEventType::UIET_onCustom4: return "UIET_onCustom4";
+        case UIEventType::UIET_onSecondaryBack: return "UIET_onSecondaryBack";
+        case UIEventType::UIET_onSecondaryLeft: return "UIET_onSecondaryLeft";
+        case UIEventType::UIET_onSecondaryRight: return "UIET_onSecondaryRight";
+        case UIEventType::UIET_onSecondaryEnter: return "UIET_onSecondaryEnter";
+        case UIEventType::UIET_onSecondaryCustom1: return "UIET_onSecondaryCustom1";
+        case UIEventType::UIET_onSecondaryCustom2: return "UIET_onSecondaryCustom2";
+        case UIEventType::UIET_onSecondaryCustom3: return "UIET_onSecondaryCustom3";
+        case UIEventType::UIET_onSecondaryCustom4: return "UIET_onSecondaryCustom4";
+        case UIEventType::UIET_onChange: return "UIET_onChange";
+        default: return "UIET_unknown - please implement";
+    }
+}
+
+String UIEventTypeToStringExplenation(UIEventType et){
+    switch(et){
+        case UIEventType::UIET_unknown: return "the event is unknown";
+        case UIEventType::UIET_recvFocus: return "the element has received focus";
+        case UIEventType::UIET_lostFocus: return "the element has lost the focus";
+        case UIEventType::UIET_onEnter: return "enter was pressed but not used for navigation";
+        case UIEventType::UIET_onBack: return "exit was pressed but not used for navigation";
+        case UIEventType::UIET_onFocusBounce: return "the element has received the focus but due to its configuration the focus got bounced";
+        case UIEventType::UIET_onLeft: return "left was pressed but not used for naviagation";
+        case UIEventType::UIET_onRight: return "right was pressed but not used for navigation";
+        case UIEventType::UIET_onCustom1: return "onCustom1 was pressed";
+        case UIEventType::UIET_onCustom2: return "onCustom2 was pressed";
+        case UIEventType::UIET_onCustom3: return "onCustom3 was pressed";
+        case UIEventType::UIET_onCustom4: return "onCustom4 was pressed";
+        case UIEventType::UIET_onSecondaryBack: return "secondary back was pressed but not used for navigation";
+        case UIEventType::UIET_onSecondaryLeft: return "secondary left was pressed but not used for naviagation";
+        case UIEventType::UIET_onSecondaryRight: return "secondary right was pressed but not used for navigation";
+        case UIEventType::UIET_onSecondaryEnter: return "secondary enter was pressed but not used for navigation";
+        case UIEventType::UIET_onSecondaryCustom1: return "secondary custom1 was pressed";
+        case UIEventType::UIET_onSecondaryCustom2: return "secondary custom2 was pressed";
+        case UIEventType::UIET_onSecondaryCustom3: return "secondary custom3 was pressed";
+        case UIEventType::UIET_onSecondaryCustom4: return "secondary custom4 was pressed";
+        case UIEventType::UIET_onChange: return "the element has changed its state";
+        default: return "the event is unknown - please implement";
     }
 }

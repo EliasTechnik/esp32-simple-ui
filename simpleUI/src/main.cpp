@@ -13,6 +13,7 @@
 #include "uiButtons.h" //buttons :)
 #include "uiInputs.h" //uiElements to handle specific user Inputs
 #include "uiImage.h" //all about images (bitmap and xbm)
+#include "uiCheckbox.h" //checkboxes
 
 //include files for images and icons
 //To save on memory the bitmaps must be manualy included.
@@ -58,6 +59,10 @@ void IRAM_ATTR b_enter_ISR(){
 
 //for ui buttons we need some callback functions
 void cbButton1(void * sender, UIEventType event_type){
+  //the sender is the uiElement that triggered the event. The event_type is the type of event that was triggered.
+  //for debugging we can use the following functions to print the event type. 
+  Slog(UIEventTypeToString(event_type));
+  Slog(UIEventTypeToStringExplenation(event_type));
   Slog("CB_Button 1!")
 }
 void cbButton2(void * sender, UIEventType event_type){
@@ -71,7 +76,18 @@ void cbIconButton1(void * sender, UIEventType event_type){
   //the HardwareInputDriver is explained later. 
   //All you need to knwo for now is that it handles user Inputs to the UI. By injecting an input we can simulate a button press.
   HID->injectInput(UserAction::backButton);
-  HID->injectInput(UserAction::leftButton); //for testing
+}
+
+void cbCheckBox1(void * sender, UIEventType event_type){
+  Slog("CB_Checkbox 1!")
+  Slog(UIEventTypeToString(event_type));
+  Slog(UIEventTypeToStringExplenation(event_type));
+}
+
+void cbCheckBox2(void * sender, UIEventType event_type){
+  Slog("CB_Checkbox 2!")
+  Slog(UIEventTypeToString(event_type));
+  Slog(UIEventTypeToStringExplenation(event_type));
 }
 
 void cbValueChange(void * sender){
@@ -135,6 +151,9 @@ void setupUI(){
 
   //create a new ui root object. This is the start of the UI Tree
   UI = new uiRoot(config);
+  UI->showStartupScreen(); //This shows a simple startup screen. It is optional but can be used to show the user that the device is booting. TODO: make it customizable
+  //Note: The Startupscreen is expected to be shown before the first call of UI->display(). During this time the display is not updated and therefore no burn in protection is active. 
+  //DO NOT USE THIS FUNCTION IF YOUR SETUP TAKES LONGER THAN 20 SECONDS TO RUN!
 
   //create some groups to structure the UI. uiSelectGroups are used to group elements that can be selected.
   uiSelectGroup* mainGroup = new uiSelectGroup();
@@ -179,6 +198,14 @@ void setupUI(){
     new uiPassiveLabel("Test",Position(32,0))
   );
 
+  //checkboxes with labels are also supported
+  secGroup->addChild(
+    new uiCheckbox(Position(10,10),"Checkbox 1", false, &cbCheckBox1)
+  );
+
+  secGroup->addChild(
+    new uiCheckbox(Position(10,25),"Checkbox 2", true, &cbCheckBox2) //the third parameter is the initial state of the checkbox
+  );
 
 
   //SimpleUI comes with some basic geometric shapes which can be used to create custom graphics and/or components.
@@ -303,6 +330,8 @@ void setup() {
   HID->addInput(LeftButton);
   HID->addInput(RightButton);
   HID->addInput(EnterButton);
+  Slog("Setup done");
+  sleep(10);
 }
 
 //this is the arduino loop function. In here we have to do two things:
