@@ -23,7 +23,7 @@ void uiCheckbox::receiveFocus(uiElement* sender){
     S_log("bounce focus",id)
     sender->receiveFocus(this);
     checked = !checked;
-    onRcvFocus(this, UIEventType::UIET_onChange);
+    SafeCallback(onRcvFocus, onRcvFocus(this, UIEventType::UIET_onChange))
 }
 
 void uiCheckbox::drawThis(frameInfo* f){

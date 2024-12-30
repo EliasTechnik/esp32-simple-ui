@@ -9,14 +9,6 @@ void (*CBonMessage)(void * context, WSMessage msg);
 void * CBcontext;
 
 */
-
-/*
-ideas:
-    - uiPages store only a (fixed) list of pointers to elements and interactiveElements. 
-    - every ui pice has to be declared permanently (global) at compile time, thus getting placed on the stack
-    - user manipulates the ui only by using the previous declared objets
-
-*/
 using namespace std; //to use string
 
 enum UIalign{UIAcenter,UIAleft,UIAright,UIAtop,UIAbottom};

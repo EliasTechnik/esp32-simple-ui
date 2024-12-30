@@ -484,6 +484,7 @@ void uiElement::draw(frameInfo* f){
 int uiElement::getNextSelectableChildID(){
     S_log("getNextSelectable()",id)
     int index = selectedChildID;
+    int allowedChecks = childs.size();
     index++;
     if(index>=childs.size()){
             index = 0;
@@ -503,8 +504,9 @@ int uiElement::getNextSelectableChildID(){
         if(index>=childs.size()){
             index = 0;
         }
-    }while(index != selectedChildID);
-
+        allowedChecks--;
+    }while(index != selectedChildID && allowedChecks>0);
+    S_log("err: No selectable child found.",id)
     return -1;
 }
 

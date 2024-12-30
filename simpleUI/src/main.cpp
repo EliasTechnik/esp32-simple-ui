@@ -14,6 +14,7 @@
 #include "uiInputs.h" //uiElements to handle specific user Inputs
 #include "uiImage.h" //all about images (bitmap and xbm)
 #include "uiCheckbox.h" //checkboxes
+#include "uiRadio.h" //radiobuttons
 
 //include files for images and icons
 //To save on memory the bitmaps must be manualy included.
@@ -94,6 +95,17 @@ void cbValueChange(void * sender){
   Slog("the value changed to:")
 }
 
+//This is a callback function for the radio group. It is called when the checked radio changes.
+//The sender is the radio group and the event_type is the event that triggered the callback.
+void cbRadioChange(void * sender, UIEventType event_type){
+  Slog("CB_RadioGroup!")
+  Slog(UIEventTypeToString(event_type));
+  Slog(UIEventTypeToStringExplenation(event_type));
+  uiRadioGroup * rg = (uiRadioGroup*)sender;
+  Serial.print("Checked Radio: ");
+  Serial.println(rg->getCheckedRadioIndex());
+}
+
 //setting up the UI can lead to quite some code. This is why we put it in a separate functions.
 //customized ui components can be created by combining existing components and using a function to set them up.
 uiSelectGroup* setupEditTest(){
@@ -160,6 +172,8 @@ void setupUI(){
   mainGroup->setID("mainGroup"); //uiElements can be identified by their ID. This is usefull for debugging and for callbacks but not neccessary.
   uiSelectGroup* secGroup = new uiSelectGroup();
   secGroup->setID("secGroup");
+  uiRadioGroup* radioGroup = new uiRadioGroup(); //when usinmg radio buttons you should use a uiRadioGroup instead of a uiSelectGroup because it has additional functionality for managing the radio logic.
+  secGroup->setID("thirdGroup");
 
   //add some ui elements to the Groups
   //uiPassiveLabels are used to display text. They are passive and can not receive focus.
@@ -206,6 +220,22 @@ void setupUI(){
   secGroup->addChild(
     new uiCheckbox(Position(10,25),"Checkbox 2", true, &cbCheckBox2) //the third parameter is the initial state of the checkbox
   );
+
+
+
+  //radioButtons are also supported. They are used to create a group of selectable elements where only one can be selected at a time.
+  //You could use them as standalone elements but they are more powerfull when used in a uiRadioGroup.
+  radioGroup->addRadio(
+    new uiRadio(Position(10,10),"Radio 1", true) //the third parameter is the initial state of the checkbox
+  );
+  radioGroup->addRadio(
+    new uiRadio(Position(10,25),"Radio 2", false) //uiRadio doesnt require a callback because they can be managed by its Parent Group (uiRadioGroup)
+  );
+  radioGroup->addRadio(
+    new uiRadio(Position(10,40),"Radio 3", false)
+  );
+
+  radioGroup->setOnChange(&cbRadioChange); //the callback is triggered when the checked radio changes.
 
 
   //SimpleUI comes with some basic geometric shapes which can be used to create custom graphics and/or components.
@@ -269,7 +299,8 @@ void setupUI(){
   uiPage* page2 = new uiPage(secGroup);
   page2->setID("page2");
   uiPage* page3 = new uiPage(canvas);
-  page2->setID("page2");
+  page3->setID("page3");
+  uiPage* page4 = new uiPage(radioGroup);
 
   //now wee add the pages to the UI root
   //the page first added is the first page shown.
@@ -278,6 +309,7 @@ void setupUI(){
   UI->addPage(page1);
   UI->addPage(page2);
   UI->addPage(page3);
+  UI->addPage(page4);
 
   //some debug output of some pages and elements
   Slog(page1->getConfig());
