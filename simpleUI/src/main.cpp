@@ -331,7 +331,7 @@ void setup() {
   HID->addInput(RightButton);
   HID->addInput(EnterButton);
   Slog("Setup done");
-  sleep(10);
+  //sleep(10);
 }
 
 //this is the arduino loop function. In here we have to do two things:

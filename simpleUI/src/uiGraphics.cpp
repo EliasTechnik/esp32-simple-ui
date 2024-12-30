@@ -163,7 +163,14 @@ void uiFrame::drawUIGraphic(frameInfo* f, uiVisualTransformation vt, Dimension d
     drawFrame(f,vt,d);
 }
 
-//uiCircle
+
+
+/*
+######################################################
+                    uiCircle
+######################################################
+*/
+
 uiCircle::uiCircle(){
     borderWidth = 1;
 }
@@ -182,14 +189,33 @@ void uiCircle::drawCircle(frameInfo* f, uiVisualTransformation vt, Position cent
         f->display->setDrawColor(1); 
     }
     
-    for(byte i = 0;i<=borderWidth-1;i++){
-        //Slog("draw circle)
+    if(borderWidth>1){
+        //draw outer circle
+        f->display->drawDisc(
+            f->viewportOffset.convertX(center.getX()),
+            f->viewportOffset.convertY(center.getY()), 
+            f->viewportOffset.convertWidth(r)
+        );
 
+        //invert color for inner circle
+        if(vt.invertedBackground){
+            f->display->setDrawColor(1);
+        }else{
+            f->display->setDrawColor(0); 
+        }
+
+        //draw inner circle
+        f->display->drawDisc(
+            f->viewportOffset.convertX(center.getX()),
+            f->viewportOffset.convertY(center.getY()), 
+            f->viewportOffset.convertWidth(r-borderWidth)
+        );
+    }else{
         f->display->drawCircle(
-                f->viewportOffset.convertX(center.getX()),
-                f->viewportOffset.convertY(center.getY()), 
-                f->viewportOffset.convertWidth(r-i)
-            );
+                        f->viewportOffset.convertX(center.getX()),
+                        f->viewportOffset.convertY(center.getY()), 
+                        f->viewportOffset.convertWidth(r)
+                    );
     }
 }
 
@@ -197,7 +223,13 @@ void uiCircle::drawUIGraphic(frameInfo* f, uiVisualTransformation vt, Dimension 
     drawCircle(f,vt,d.getCenter(),d.getShortestToCenter());
 }
 
-//uiFilledCircle
+
+/*
+######################################################
+                    uiFilledCircle
+######################################################
+*/
+
 uiFilledCircle::uiFilledCircle(){
 }
 
@@ -222,7 +254,11 @@ void uiFilledCircle::drawUIGraphic(frameInfo* f, uiVisualTransformation vt, Dime
 }
 
 
-//uiLine
+/*
+######################################################
+                    uiLine
+######################################################
+*/
 uiLine::uiLine(){
     borderWidth = 1;
 }

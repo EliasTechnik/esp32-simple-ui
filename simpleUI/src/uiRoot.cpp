@@ -188,18 +188,18 @@ void uiRoot::energyManager(){
     //check display time
     if(screenOnTime<=millis() && config.useSleep){
         //turn off
-        Slog("enter screen sleep")
+        //Slog("enter screen sleep")
         screenSwitch(ScreenState::off);
     }
 }
 
 void uiRoot::receiveFocus(){
     if(pages.size()>1){
-        Slog("got focus")
+        //Slog("got focus")
         focus = FocusState::current;
     }else{
         //reject focus
-        Slog("would like to reject focus")
+        //Slog("would like to reject focus")
         focus = FocusState::current;
         //focus = FocusState::child;
         //pages.at(currentPage)->receiveFocus(this);
